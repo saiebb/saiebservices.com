@@ -1,0 +1,78 @@
+# Database configuration
+action/db.php
+
+# Uploaded files and images
+images/uploads/
+images/clients/uploaded/
+saiebadmin25/images/uploads/
+
+# Log files
+*.log
+error_log
+access_log
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Cache files
+cache/
+tmp/
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Sensitive configuration files
+config/database.php
+config/secrets.php
+
+# Session files
+sessions/
+
+# Vendor directories (if using Composer)
+vendor/
+
+# Node modules (if using npm)
+node_modules/
+
+# Build files
+dist/
+build/
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Large media files (optional - uncomment if needed)
+# *.mp4
+# *.avi
+# *.mov
+# *.wmv
+# *.flv
+
+# PDF files in uploads (optional)
+# uploads/*.pdf
