@@ -1,5 +1,11 @@
-# Database configuration
-action/db.php
+# Database configuration (old files - now using config/database.php)
+# action/db.php
+# saiebadmin25/action/db.php
+
+# Test and setup files (remove these in production)
+test-connection.php
+setup-local-db.php
+system-info.php
 
 # Uploaded files and images
 images/uploads/

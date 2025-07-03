@@ -1,18 +1,18 @@
 <?php
 /**
- * ملف الاتصال بقاعدة البيانات - لوحة التحكم الإدارية
- * Admin Panel Database Connection File
+ * ملف الاتصال بقاعدة البيانات - SAIEB Services
+ * Database Connection File with Auto Environment Detection
  * 
  * يتم التبديل تلقائياً بين بيئة التطوير والخادم المباشر
  */
 
 // تضمين ملف إعدادات قاعدة البيانات
-require_once dirname(dirname(__DIR__)) . '/config/database.php';
+require_once dirname(__DIR__) . '/config/database.php';
 
 // الحصول على معلومات البيئة (للتطوير فقط)
 if ($isLocal) {
     // يمكن إضافة رسائل تطوير هنا إذا لزم الأمر
-    // echo "<!-- لوحة التحكم - البيئة الحالية: تطوير محلي -->";
+    // echo "<!-- البيئة الحالية: تطوير محلي -->";
 }
 
 // المتغيرات متاحة الآن للاستخدام:
