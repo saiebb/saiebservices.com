@@ -27,6 +27,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <meta name="author" content="SemiColonWeb" />
     <meta name="description"
         content="Get Canvas to build powerful websites easily with the Highly Customizable &amp; Best Selling Bootstrap Template, today." />
+    
+    <!-- Google Site Verification -->
+    <meta name="google-site-verification" content="-nu_pz27v0fxcLY9mFOF-ymVgGra8d0ovT06122k0Do" />
 
     <!-- Font Imports -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -1,0 +1,38 @@
+# Robots.txt for SAIEB Services
+# https://saiebservices.com
+
+User-agent: *
+Allow: /
+
+# Allow important pages
+Allow: /index.php
+Allow: /about.php
+Allow: /contact.php
+Allow: /service-business.php
+Allow: /service-individual.php
+Allow: /training.php
+Allow: /financial.php
+Allow: /library.php
+Allow: /blog.php
+
+# Allow static resources
+Allow: /css/
+Allow: /js/
+Allow: /images/
+
+# Disallow admin area
+Disallow: /saiebadmin25/
+
+# Disallow config files
+Disallow: /config/
+
+# Disallow action files
+Disallow: /action/
+
+# Disallow temporary files
+Disallow: /*.tmp
+Disallow: /*.log
+Disallow: /*.bak
+
+# Sitemap location
+Sitemap: https://saiebservices.com/sitemap.xml

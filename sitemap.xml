@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    
+    <!-- الصفحة الرئيسية -->
+    <url>
+        <loc>https://saiebservices.com/</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- صفحة من نحن -->
+    <url>
+        <loc>https://saiebservices.com/about.php</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- صفحة اتصل بنا -->
+    <url>
+        <loc>https://saiebservices.com/contact.php</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- خدمات الشركات -->
+    <url>
+        <loc>https://saiebservices.com/service-business.php</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- خدمات الأفراد -->
+    <url>
+        <loc>https://saiebservices.com/service-individual.php</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <!-- التدريب -->
+    <url>
+        <loc>https://saiebservices.com/training.php</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- الخدمات المالية -->
+    <url>
+        <loc>https://saiebservices.com/financial.php</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- المكتبة -->
+    <url>
+        <loc>https://saiebservices.com/library.php</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- المدونة -->
+    <url>
+        <loc>https://saiebservices.com/blog.php</loc>
+        <lastmod>2024-12-19</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+</urlset>

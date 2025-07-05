@@ -1,2 +1,0 @@
--- هذا الملف فارغ ويمكن حذفه
--- This file is empty and can be deleted
