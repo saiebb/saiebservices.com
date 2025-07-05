@@ -148,7 +148,7 @@ if($rows['ar_type'] == 6 ){
         </div>
     </div>
 </section><!-- #content end -->
-<script src="admin/plugins/jquery/jquery.min.js"></script>
+<script src="saiebadmin25/plugins/jquery/jquery.min.js"></script>
 <?php
 include 'footer.php';
 ?>

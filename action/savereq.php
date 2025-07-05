@@ -1,6 +1,7 @@
 <?php
 include 'db.php';
 
+
 $tableName = $prefix . "requests";
 $req_cli_name = strip_tags($_POST['req_cli_name']);
 $req_cli_email = strip_tags($_POST['req_cli_email']);
@@ -8,35 +9,31 @@ $req_cli_phone = strip_tags($_POST['req_cli_phone']);
 $req_cli_time_to_call = strip_tags($_POST['req_cli_time_to_call']);
 $req_ser_id = strip_tags($_POST['req_ser_id']);
 $req_ser_type = strip_tags($_POST['req_ser_type']);
+$google_reviews_consent = isset($_POST['google_reviews_consent']) ? intval($_POST['google_reviews_consent']) : 0;
 
-// إنشاء معرف طلب فريد
-$order_id = 'SAIEB-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
 
-// التحقق من عدم تكرار معرف الطلب
-$check_sql = "SELECT req_id FROM $tableName WHERE req_order_id = '$order_id'";
-$check_result = $conn->query($check_sql);
+// التحقق من وجود عمود google_reviews_consent في الجدول
+$checkColumn = "SHOW COLUMNS FROM $tableName LIKE 'google_reviews_consent'";
+$columnExists = $conn->query($checkColumn)->num_rows > 0;
 
-// إذا كان المعرف موجود، أنشئ معرف جديد
-while ($check_result->num_rows > 0) {
-    $order_id = 'SAIEB-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
-    $check_result = $conn->query("SELECT req_id FROM $tableName WHERE req_order_id = '$order_id'");
+if ($columnExists) {
+    // إذا كان العمود موجود، أدرج البيانات مع موافقة Google
+    $sql = "INSERT INTO $tableName
+        ( `req_ser_id`,  `req_ser_type`,  `req_cli_name` ,`req_cli_email`, `req_cli_phone` ,`req_cli_time_to_call` , `req_time` , req_status, google_reviews_consent)
+        VALUES
+        (  '$req_ser_id',  '$req_ser_type' , '$req_cli_name','$req_cli_email',  '$req_cli_phone' , '$req_cli_time_to_call' , NOW() , 1, $google_reviews_consent);";
+} else {
+    // إذا لم يكن العمود موجود، أدرج البيانات بدون موافقة Google (للتوافق مع النظام الحالي)
+    $sql = "INSERT INTO $tableName
+        ( `req_ser_id`,  `req_ser_type`,  `req_cli_name` ,`req_cli_email`, `req_cli_phone` ,`req_cli_time_to_call` , `req_time` , req_status)
+        VALUES
+        (  '$req_ser_id',  '$req_ser_type' , '$req_cli_name','$req_cli_email',  '$req_cli_phone' , '$req_cli_time_to_call' , NOW() , 1);";
 }
 
-$sql = "INSERT INTO $tableName
-    ( `req_ser_id`,  `req_ser_type`,  `req_cli_name` ,`req_cli_email`, `req_cli_phone` ,`req_cli_time_to_call` , `req_time` , req_status, req_order_id)
-    VALUES
-    (  '$req_ser_id',  '$req_ser_type' , '$req_cli_name','$req_cli_email',  '$req_cli_phone' , '$req_cli_time_to_call' , NOW() , 1, '$order_id');";
-
+ 
 if ($conn->query($sql)) {
-    // إرجاع معرف الطلب للاستخدام في إعادة التوجيه
-    echo json_encode([
-        'status' => 'success',
-        'order_id' => $order_id,
-        'message' => 'تم حفظ الطلب بنجاح'
-    ]);
+    echo '1';
 } else {
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'حدث خطأ في حفظ الطلب'
-    ]);
+    echo '2';
+
 }

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار Google Customer Reviews</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .test-container { max-width: 800px; margin: 50px auto; padding: 20px; }
+        .test-section { margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .warning { background-color: #fff3cd; border-color: #ffeaa7; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .code { background-color: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container test-container">
+        <h1 class="text-center mb-4">اختبار نظام Google Customer Reviews</h1>
+        
+        <!-- اختبار تحميل Google API -->
+        <div class="test-section" id="api-test">
+            <h3>1. اختبار تحميل Google API</h3>
+            <p>جاري التحقق من تحميل Google API...</p>
+            <div id="api-status" class="mt-3"></div>
+        </div>
+        
+        <!-- اختبار النموذج -->
+        <div class="test-section">
+            <h3>2. اختبار نموذج Google Customer Reviews</h3>
+            <p>اضغط على الزر أدناه لاختبار عرض نموذج Google Customer Reviews:</p>
+            
+            <div class="mb-3">
+                <label for="test-email" class="form-label">البريد الإلكتروني للاختبار:</label>
+                <input type="email" class="form-control" id="test-email" value="test@example.com">
+            </div>
+            
+            <button class="btn btn-primary" onclick="testGoogleReviews()">اختبار Google Reviews</button>
+            <div id="test-result" class="mt-3"></div>
+        </div>
+        
+        <!-- معلومات الإعداد -->
+        <div class="test-section warning">
+            <h3>3. معلومات الإعداد</h3>
+            <p><strong>ملاحظة مهمة:</strong> لكي يعمل النظام بشكل صحيح، تحتاج إلى:</p>
+            <ul>
+                <li>معرف تاجر صحيح من Google Merchant Center</li>
+                <li>تفعيل Google Customer Reviews في حسابك</li>
+                <li>إعداد النطاق (Domain) في Google Merchant Center</li>
+            </ul>
+            
+            <div class="code mt-3">
+                <strong>معرف التاجر الحالي:</strong> <span id="current-merchant-id">123456789</span><br>
+                <strong>حالة:</strong> <span class="text-danger">معرف تجريبي - يحتاج تحديث</span>
+            </div>
+        </div>
+        
+        <!-- سجل الأحداث -->
+        <div class="test-section">
+            <h3>4. سجل الأحداث</h3>
+            <div id="event-log" class="code" style="height: 200px; overflow-y: auto;">
+                جاري تحميل النظام...<br>
+            </div>
+            <button class="btn btn-secondary btn-sm mt-2" onclick="clearLog()">مسح السجل</button>
+        </div>
+        
+        <!-- روابط مفيدة -->
+        <div class="test-section">
+            <h3>5. روابط مفيدة</h3>
+            <ul>
+                <li><a href="https://merchants.google.com/" target="_blank">Google Merchant Center</a></li>
+                <li><a href="https://developers.google.com/customer-reviews" target="_blank">Google Customer Reviews Documentation</a></li>
+                <li><a href="add_google_reviews_column.php">إعداد قاعدة البيانات</a></li>
+                <li><a href="GOOGLE_REVIEWS_SETUP.md">دليل الإعداد الكامل</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Google API -->
+    <script src="https://apis.google.com/js/platform.js?onload=initGoogleAPI" async defer></script>
+    
+    <script>
+        let eventLog = document.getElementById('event-log');
+        
+        function logEvent(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString('ar-SA');
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'blue';
+            eventLog.innerHTML += `<span style="color: ${color}">[${timestamp}] ${message}</span><br>`;
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+        
+        function clearLog() {
+            eventLog.innerHTML = 'تم مسح السجل...<br>';
+        }
+        
+        // تهيئة Google API
+        function initGoogleAPI() {
+            logEvent('بدء تحميل Google API...', 'info');
+            
+            if (typeof gapi !== 'undefined') {
+                gapi.load('surveyoptin', function() {
+                    logEvent('تم تحميل Google Customer Reviews API بنجاح!', 'success');
+                    document.getElementById('api-status').innerHTML = 
+                        '<div class="alert alert-success">✅ تم تحميل Google API بنجاح</div>';
+                });
+            } else {
+                logEvent('فشل في تحميل Google API', 'error');
+                document.getElementById('api-status').innerHTML = 
+                    '<div class="alert alert-danger">❌ فشل في تحميل Google API</div>';
+            }
+        }
+        
+        // اختبار Google Reviews
+        function testGoogleReviews() {
+            const email = document.getElementById('test-email').value;
+            const resultDiv = document.getElementById('test-result');
+            
+            if (!email) {
+                resultDiv.innerHTML = '<div class="alert alert-warning">يرجى إدخال بريد إلكتروني للاختبار</div>';
+                return;
+            }
+            
+            logEvent(`بدء اختبار Google Reviews للبريد: ${email}`, 'info');
+            
+            if (typeof gapi === 'undefined' || !gapi.surveyoptin) {
+                const errorMsg = 'Google API غير محمل. تأكد من الاتصال بالإنترنت.';
+                logEvent(errorMsg, 'error');
+                resultDiv.innerHTML = `<div class="alert alert-danger">${errorMsg}</div>`;
+                return;
+            }
+            
+            try {
+                // إنشاء معرف طلب تجريبي
+                const orderId = 'TEST-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                
+                // تاريخ التسليم المتوقع (7 أيام من الآن)
+                const estimatedDelivery = new Date();
+                estimatedDelivery.setDate(estimatedDelivery.getDate() + 7);
+                const deliveryDate = estimatedDelivery.toISOString().split('T')[0];
+                
+                logEvent(`معرف الطلب التجريبي: ${orderId}`, 'info');
+                logEvent(`تاريخ التسليم المتوقع: ${deliveryDate}`, 'info');
+                
+                // عرض نموذج Google Customer Reviews
+                gapi.surveyoptin.render({
+                    // REQUIRED FIELDS
+                    "merchant_id": 123456789, // معرف تجريبي
+                    "order_id": orderId,
+                    "email": email,
+                    "delivery_country": "SA",
+                    "estimated_delivery_date": deliveryDate,
+                    
+                    // OPTIONAL FIELDS
+                    "products": [{
+                        "gtin": "SAIEB_TEST_SERVICE"
+                    }],
+                    
+                    // إعدادات العرض
+                    "opt_in_style": "OPT_IN_STYLE_CENTER_DIALOG"
+                });
+                
+                logEvent('تم عرض نموذج Google Customer Reviews بنجاح!', 'success');
+                resultDiv.innerHTML = '<div class="alert alert-success">✅ تم عرض نموذج Google Customer Reviews</div>';
+                
+            } catch (error) {
+                const errorMsg = `خطأ في عرض النموذج: ${error.message}`;
+                logEvent(errorMsg, 'error');
+                resultDiv.innerHTML = `<div class="alert alert-danger">❌ ${errorMsg}</div>`;
+            }
+        }
+        
+        // تسجيل تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            logEvent('تم تحميل صفحة الاختبار', 'success');
+            
+            // محاولة تحميل Google API إذا لم يتم تحميله
+            setTimeout(() => {
+                if (typeof gapi === 'undefined') {
+                    logEvent('Google API لم يتم تحميله تلقائياً، جاري المحاولة يدوياً...', 'warning');
+                    const script = document.createElement('script');
+                    script.src = 'https://apis.google.com/js/platform.js?onload=initGoogleAPI';
+                    script.async = true;
+                    script.defer = true;
+                    document.head.appendChild(script);
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

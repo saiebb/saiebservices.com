@@ -5,12 +5,46 @@
 			============================================= -->
     <div id="copyrights">
         <div class="container">
+            <!-- شارة آراء العملاء عبر Google - في الوسط -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="text-center">
+                        <h5 class="text-light mb-3">
+                            <i class="uil uil-star text-warning me-2"></i>
+                            تقييمات عملائنا على Google
+                            <i class="uil uil-star text-warning ms-2"></i>
+                        </h5>
+                        <div id="google-reviews-badge" class="google-badge-center-container">
+                            <div class="d-flex justify-content-center align-items-center" style="min-height: 100px;">
+                                <div class="text-center">
+                                    <div class="spinner-border text-primary mb-2" role="status">
+                                        <span class="visually-hidden">جاري التحميل...</span>
+                                    </div>
+                                    <p class="text-light mb-0">جاري تحميل التقييمات...</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- رابط لترك تقييم -->
+                        <div class="text-center mt-3">
+                            <a href="https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frTQ" 
+                               target="_blank" 
+                               class="btn btn-outline-light btn-sm rounded-pill px-4">
+                                <i class="uil uil-edit me-1"></i>
+                                شاركنا تجربتك على Google
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="row col-mb-30">
                 <div class="col-md-6 text-center text-md-start">
                     حقوق الطبع والنشر&copy; 2024 جميع الحقوق محفوظة
                 </div>
 
                 <div class="col-md-6 text-center text-md-end">
+                    
                     <div class="d-flex justify-content-center justify-content-md-end mb-2">
                         <a href="https://www.instagram.com/saiebcompany/" target="_blank"
                             class="social-icon border-transparent si-small h-bg-facebook">
@@ -136,8 +170,19 @@ if($rows['ar_type']== 2) {
 
                     <div class="w-100"></div>
 
-
-
+                    <!-- خيار الموافقة على آراء العملاء مع Google -->
+                    <div class="col-12 form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="google_reviews_consent" name="google_reviews_consent" value="1">
+                            <label class="form-check-label" for="google_reviews_consent">
+                                <small>أوافق على مشاركة تجربتي مع خدمات صيب عبر آراء العملاء في Google لمساعدة العملاء الآخرين</small>
+                            </label>
+                        </div>
+                        <small class="text-muted">
+                            <i class="bi-info-circle"></i>
+                            هذا الخيار اختياري ويساعدنا في تحسين خدماتنا وبناء الثقة مع العملاء الجدد
+                        </small>
+                    </div>
 
                     <div class="w-100"></div>
 
@@ -204,14 +249,37 @@ jQuery(document).ready(function($) {
                     req_ser_type: $('#service-type').val(),
                     req_cli_name: $('#req_cli_name').val(),
                     req_cli_email: $('#req_cli_email').val(),
+                    google_reviews_consent: $('#google_reviews_consent').is(':checked') ? 1 : 0,
                 },
                 success: function(response) {
                     if (response == '1') {
                         $('#successDiv').removeClass('hide');
+                        
+                        // حفظ بيانات العميل قبل مسح النموذج
+                        const customerData = {
+                            name: $('#req_cli_name').val(),
+                            email: $('#req_cli_email').val(),
+                            phone: $('#req_cli_phone').val(),
+                            googleConsent: $('#google_reviews_consent').is(':checked')
+                        };
+                        
+                        // إذا وافق العميل على آراء Google، اعرض نموذج Google Customer Reviews
+                        if (customerData.googleConsent) {
+                            console.log('✅ العميل وافق على Google Customer Reviews');
+                            // تأخير قصير لإظهار رسالة النجاح أولاً
+                            setTimeout(() => {
+                                showGoogleCustomerReviews(customerData);
+                            }, 1500);
+                        } else {
+                            console.log('❌ العميل لم يوافق على Google Customer Reviews');
+                        }
+                        
                         $('#req_cli_phone').val('');
                         $('#req_cli_time_to_call').val('');
                         $('#req_cli_name').val('');
                         $('#req_cli_email').val('');
+                        $('#google_reviews_consent').prop('checked', false);
+                        
                         setTimeout(() => {
                             $('#myModal').modal('hide');
                             $('#successDiv').addClass('hide');
@@ -232,10 +300,201 @@ jQuery(document).ready(function($) {
         $("#form").submit(); // Trigger form validation and submission
     });
 
-
-
-
 });
+
+// وظيفة عرض Google Customer Reviews
+function showGoogleCustomerReviews(customerData) {
+    // التحقق من تحميل Google API
+    if (typeof gapi !== 'undefined' && gapi.surveyoptin) {
+        try {
+            // إنشاء معرف طلب فريد
+            const orderId = 'SAIEB-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+            
+            // التحقق من وجود البيانات
+            if (!customerData || !customerData.email || customerData.email.trim() === '') {
+                console.error('❌ البريد الإلكتروني مطلوب لنظام Google Customer Reviews');
+                return;
+            }
+            
+            console.log('📧 بيانات العميل:', {
+                name: customerData.name,
+                email: customerData.email
+            });
+            
+            // تقدير تاريخ التسليم (7 أيام من الآن)
+            const estimatedDelivery = new Date();
+            estimatedDelivery.setDate(estimatedDelivery.getDate() + 7);
+            const deliveryDate = estimatedDelivery.toISOString().split('T')[0];
+            
+            // عرض نموذج Google Customer Reviews
+            gapi.surveyoptin.render({
+                // REQUIRED FIELDS
+                "merchant_id": 5349752399, // معرف التاجر من Google Merchant Center
+                "order_id": orderId,
+                "email": customerData.email,
+                "delivery_country": "SA", // السعودية
+                "estimated_delivery_date": deliveryDate,
+                
+                // OPTIONAL FIELDS - إزالة GTIN لأنه يسبب مشاكل
+                // "products": [{
+                //     "gtin": "SAIEB_SERVICE_" + $('#service-type').val() + "_" + $('#service-id').val()
+                // }],
+                
+                // إعدادات إضافية
+                "opt_in_style": "OPT_IN_STYLE_CENTER_DIALOG"
+            });
+            
+            console.log('تم عرض نموذج Google Customer Reviews للعميل: ' + customerData.name);
+            
+        } catch (error) {
+            console.error('خطأ في عرض Google Customer Reviews:', error);
+        }
+    } else {
+        console.warn('Google API غير محمل - سيتم المحاولة مرة أخرى');
+        // محاولة أخرى بعد ثانية واحدة
+        setTimeout(() => showGoogleCustomerReviews(customerData), 1000);
+    }
+}
+
+// تحميل Google API عند تحميل الصفحة
+function loadGoogleAPI() {
+    if (typeof gapi === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://apis.google.com/js/platform.js?onload=initGoogleAPI';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
+}
+
+// تهيئة Google API
+function initGoogleAPI() {
+    if (typeof gapi !== 'undefined') {
+        gapi.load('surveyoptin', function() {
+            console.log('تم تحميل Google Customer Reviews API بنجاح');
+        });
+    }
+}
+
+// تحميل API عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof $ !== 'undefined') {
+        loadGoogleAPI();
+    }
+    loadGoogleRatingBadge();
+});
+
+// تحميل وعرض شارة آراء العملاء عبر Google
+function loadGoogleRatingBadge() {
+    // التحقق من وجود العنصر المخصص للشارة
+    const badgeContainer = document.getElementById('google-reviews-badge');
+    if (!badgeContainer) {
+        console.warn('⚠️ لم يتم العثور على حاوي شارة Google Reviews');
+        return;
+    }
+    
+    // تحميل Google API للشارة
+    if (typeof gapi === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://apis.google.com/js/platform.js?onload=renderGoogleBadge';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    } else {
+        renderGoogleBadge();
+    }
+}
+
+// عرض شارة Google Customer Reviews
+function renderGoogleBadge() {
+    console.log('🏆 بدء عرض شارة آراء العملاء عبر Google...');
+    
+    const badgeContainer = document.getElementById('google-reviews-badge');
+    if (!badgeContainer) {
+        console.error('❌ لم يتم العثور على حاوي الشارة');
+        return;
+    }
+    
+    if (typeof gapi !== 'undefined') {
+        gapi.load('ratingbadge', function() {
+            try {
+                gapi.ratingbadge.render(badgeContainer, {
+                    "merchant_id": 5349752399,
+                    // إعدادات إضافية للشارة
+                    "position": "BOTTOM_CENTER"
+                });
+                console.log('✅ تم عرض شارة آراء العملاء عبر Google بنجاح');
+                
+                // إضافة CSS مخصص للشارة المركزية المحسنة
+                setTimeout(() => {
+                    const badgeIframe = badgeContainer.querySelector('iframe');
+                    if (badgeIframe) {
+                        // تطبيق التنسيق المحسن للشارة المركزية
+                        badgeIframe.style.width = '100%';
+                        badgeIframe.style.minWidth = '300px';
+                        badgeIframe.style.maxWidth = '450px';
+                        badgeIframe.style.height = 'auto';
+                        badgeIframe.style.minHeight = '80px';
+                        badgeIframe.style.borderRadius = '12px';
+                        badgeIframe.style.background = 'white';
+                        badgeIframe.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                        
+                        console.log('🎨 تم تطبيق التنسيق المحسن للشارة المركزية');
+                        
+                        // إضافة تأثير بصري للحاوي
+                        const container = badgeContainer.closest('.google-badge-center-container');
+                        if (container) {
+                            container.style.background = 'rgba(255, 255, 255, 0.15)';
+                            container.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                        }
+                        
+                    } else {
+                        console.warn('⚠️ لم يتم عرض الشارة - قد لا تتوفر تقييمات');
+                        
+                        // عرض محتوى بديل جميل
+                        badgeContainer.innerHTML = `
+                            <div class="text-center py-4">
+                                <div class="mb-3">
+                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+                                </div>
+                                <h5 class="text-light mb-2">نحن في انتظار تقييمكم الكريم</h5>
+                                <p class="text-light opacity-75 mb-3">كونوا أول من يقيم خدماتنا المتميزة على Google</p>
+                                <a href="https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frTQ" 
+                                   target="_blank" 
+                                   class="btn btn-warning btn-sm rounded-pill px-4">
+                                    <i class="uil uil-star me-1"></i>
+                                    اترك تقييمك الآن
+                                </a>
+                            </div>
+                        `;
+                        
+                        console.log('ℹ️ تم عرض محتوى بديل جميل للشارة');
+                    }
+                }, 2000);
+                
+            } catch (error) {
+                console.error('❌ خطأ في عرض شارة Google:', error);
+            }
+        });
+    } else {
+        console.error('❌ Google API غير متوفر لعرض الشارة');
+    }
+}
+
+// جعل الدالة متاحة عالمياً
+window.renderGoogleBadge = renderGoogleBadge;
+
+</script>
+
+<!-- Google Customer Reviews Badge (اختياري) -->
+<script>
+window.renderOptIn = function() {
+    // يمكن إضافة شارة آراء العملاء هنا إذا رغبت
+}
 </script>
 
 

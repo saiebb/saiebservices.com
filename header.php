@@ -46,6 +46,131 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css" />
+    
+    <!-- Google Customer Reviews Badge CSS -->
+    <style>
+        #google-reviews-badge {
+            margin: 15px auto !important;
+            text-align: center !important;
+        }
+        
+        #google-reviews-badge iframe {
+            width: 100% !important;
+            min-width: 200px !important;
+            max-width: 300px !important;
+            height: auto !important;
+            min-height: 50px !important;
+            border: none !important;
+            margin: 0 auto !important;
+            display: block !important;
+        }
+        
+        /* تحسين مظهر الشارة على الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            #google-reviews-badge {
+                margin: 10px 0 !important;
+            }
+            
+            #google-reviews-badge iframe {
+                min-width: 180px !important;
+                max-width: 250px !important;
+            }
+        }
+        
+        /* إضافة حدود للشارة للتأكد من ظهورها أثناء التطوير */
+        .google-badge-debug #google-reviews-badge {
+            border: 2px dashed #007bff !important;
+            background: rgba(0, 123, 255, 0.1) !important;
+            border-radius: 8px !important;
+        }
+        
+        /* تنسيق الشارة في وسط الفوتر */
+        .google-badge-center-container {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 15px auto;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .google-badge-center-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .google-badge-center-container iframe {
+            width: 100% !important;
+            min-width: 300px !important;
+            max-width: 450px !important;
+            height: auto !important;
+            min-height: 80px !important;
+            border: none !important;
+            margin: 0 auto !important;
+            display: block !important;
+            border-radius: 12px !important;
+            background: white !important;
+        }
+        
+        /* تحسين عنوان التقييمات */
+        #copyrights h5 {
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px !important;
+        }
+        
+        /* تحسين النجوم في العنوان */
+        #copyrights .uil-star {
+            font-size: 1.2em;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            animation: starGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes starGlow {
+            from { 
+                text-shadow: 0 0 5px #ffc107, 0 0 10px #ffc107; 
+            }
+            to { 
+                text-shadow: 0 0 10px #ffc107, 0 0 20px #ffc107, 0 0 30px #ffc107; 
+            }
+        }
+        
+        /* تحسين الاستجابة للشارة المركزية */
+        @media (max-width: 768px) {
+            .google-badge-center-container {
+                margin: 10px 15px;
+                padding: 20px 15px;
+                max-width: none;
+            }
+            
+            .google-badge-center-container iframe {
+                min-width: 250px !important;
+                max-width: 350px !important;
+                min-height: 70px !important;
+            }
+            
+            #copyrights h5 {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .google-badge-center-container {
+                padding: 15px 10px;
+            }
+            
+            .google-badge-center-container iframe {
+                min-width: 200px !important;
+                max-width: 280px !important;
+                min-height: 60px !important;
+            }
+        }
+    </style>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link rel="icon" type="image/png" href="images/favicon-32x32.png" />
