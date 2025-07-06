@@ -66,22 +66,17 @@ include "action/contact_by_id.php";
 
 
                             <a href="<?php echo $rows['con_instagram'] ?>" target="_blank"
-                                class="social-icon border-transparent bg-white h-bg-facebook">
-
-                                <i class="fa-brands fa-instagram"></i>
+                                class="social-icon border-transparent bg-white h-bg-instagram">
                                 <i class="fa-brands fa-instagram"></i>
                             </a>
 
                             <a href="<?php echo $rows['con_x'] ?>" target="_blank"
                                 class="social-icon border-transparent bg-white h-bg-x-twitter">
                                 <i class="fa-brands fa-x-twitter"></i>
-                                <i class="fa-brands fa-x-twitter"></i>
                             </a>
-
 
                             <a href="<?php echo $rows['con_linkedin'] ?>" target="_blank"
                                 class="social-icon border-transparent bg-white h-bg-linkedin">
-                                <i class="fa-brands fa-linkedin"></i>
                                 <i class="fa-brands fa-linkedin"></i>
                             </a>
 

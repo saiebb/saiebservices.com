@@ -1,0 +1,195 @@
+/*!
+ * Social Icons Fix - حل مشكلة أيقونات التواصل الاجتماعي
+ * يحتوي على تعريفات الأيقونات الأساسية وحلول احتياطية
+ */
+
+/* تأكد من تحميل الخطوط */
+@font-face {
+  font-family: "Font Awesome 6 Brands";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("icons/font-awesome/fa-brands-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Font Awesome 6 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("icons/font-awesome/fa-solid-900.woff2") format("woff2");
+}
+
+/* إعادة تعريف الكلاسات الأساسية */
+.fa-brands,
+.fab {
+  font-family: "Font Awesome 6 Brands" !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  display: inline-block !important;
+  line-height: 1 !important;
+}
+
+.fa-solid,
+.fas {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  display: inline-block !important;
+  line-height: 1 !important;
+}
+
+/* تعريفات الأيقونات الاجتماعية */
+.fa-instagram:before,
+.fa-brands.fa-instagram:before {
+  content: "\f16d" !important;
+}
+
+.fa-x-twitter:before,
+.fa-brands.fa-x-twitter:before {
+  content: "\e61b" !important;
+}
+
+.fa-twitter:before,
+.fa-brands.fa-twitter:before {
+  content: "\f099" !important;
+}
+
+.fa-linkedin:before,
+.fa-brands.fa-linkedin:before {
+  content: "\f08c" !important;
+}
+
+.fa-facebook:before,
+.fa-brands.fa-facebook:before {
+  content: "\f09a" !important;
+}
+
+.fa-whatsapp:before,
+.fa-brands.fa-whatsapp:before {
+  content: "\f232" !important;
+}
+
+.fa-youtube:before,
+.fa-brands.fa-youtube:before {
+  content: "\f167" !important;
+}
+
+/* أيقونات أساسية */
+.fa-home:before { content: "\f015" !important; }
+.fa-envelope:before { content: "\f0e0" !important; }
+.fa-phone:before { content: "\f095" !important; }
+.fa-user:before { content: "\f007" !important; }
+.fa-star:before { content: "\f005" !important; }
+
+/* تحسين عرض الأيقونات الاجتماعية */
+.social-icon {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.social-icon i {
+  display: inline-block !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+  line-height: 1 !important;
+}
+
+/* حل احتياطي بالرموز التعبيرية */
+.social-icon[href*="instagram"] i:after {
+  content: "📷";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.social-icon[href*="twitter"] i:after,
+.social-icon[href*="x.com"] i:after {
+  content: "🐦";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.social-icon[href*="linkedin"] i:after {
+  content: "💼";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.social-icon[href*="facebook"] i:after {
+  content: "📘";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* إظهار الرموز الاحتياطية عند فشل تحميل الأيقونات */
+.social-icon i:before {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* إذا لم تحمل الأيقونة، أظهر الرمز الاحتياطي */
+@supports not (content: "\f16d") {
+  .social-icon i:before {
+    opacity: 0 !important;
+  }
+  
+  .social-icon i:after {
+    opacity: 1 !important;
+  }
+}
+
+/* تحسين ألوان الأيقونات */
+.h-bg-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; }
+.h-bg-x-twitter { background: #000000 !important; }
+.h-bg-linkedin { background: #0077b5 !important; }
+.h-bg-facebook { background: #1877f2 !important; }
+
+/* تأثيرات التفاعل */
+.social-icon:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+/* إصلاح مشاكل الحجم */
+.si-small {
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 18px !important;
+}
+
+.si-small i {
+  font-size: 18px !important;
+}

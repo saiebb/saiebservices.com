@@ -47,20 +47,17 @@
                     
                     <div class="d-flex justify-content-center justify-content-md-end mb-2">
                         <a href="https://www.instagram.com/saiebcompany/" target="_blank"
-                            class="social-icon border-transparent si-small h-bg-facebook">
-                            <i class="fa-brands fa-instagram"></i>
+                            class="social-icon border-transparent si-small h-bg-instagram">
                             <i class="fa-brands fa-instagram"></i>
                         </a>
 
                         <a href="https://x.com/saiebcompany" target="_blank"
                             class="social-icon border-transparent si-small h-bg-x-twitter">
                             <i class="fa-brands fa-x-twitter"></i>
-                            <i class="fa-brands fa-x-twitter"></i>
                         </a>
 
                         <a href="https://www.linkedin.com/in/saiebcompany/" target="_blank"
                             class="social-icon border-transparent si-small me-0 h-bg-linkedin">
-                            <i class="fa-brands fa-linkedin"></i>
                             <i class="fa-brands fa-linkedin"></i>
                         </a>
                     </div>
@@ -84,6 +81,9 @@
 <script src="js/functions.bundle.js"></script>
 <!-- Google APIs Monitor - مراقب خدمات Google -->
 <script src="js/google-apis-monitor.js"></script>
+
+<!-- Icons Fallback Script - حل احتياطي للأيقونات -->
+<script src="js/icons-fallback.js"></script>
 
 
 <script>

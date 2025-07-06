@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار سريع للأيقونات</title>
+    
+    <!-- تحميل الملفات المحلية -->
+    <link rel="stylesheet" href="css/font-icons.css" />
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .icon-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #333;
+            border-radius: 8px;
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-3px);
+        }
+        
+        .h-bg-instagram { background-color: #e4405f; }
+        .h-bg-x-twitter { background-color: #000; }
+        .h-bg-linkedin { background-color: #0077b5; }
+        .h-bg-facebook { background-color: #1877f2; }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 style="text-align: center; color: #333;">اختبار أيقونات التواصل الاجتماعي</h1>
+        
+        <div id="status-container">
+            <div class="status warning">جاري فحص الأيقونات...</div>
+        </div>
+        
+        <h3>الأيقونات:</h3>
+        <div class="icon-row">
+            <a href="#" class="social-icon h-bg-instagram" title="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            
+            <a href="#" class="social-icon h-bg-x-twitter" title="X (Twitter)">
+                <i class="fa-brands fa-x-twitter"></i>
+            </a>
+            
+            <a href="#" class="social-icon h-bg-linkedin" title="LinkedIn">
+                <i class="fa-brands fa-linkedin"></i>
+            </a>
+            
+            <a href="#" class="social-icon h-bg-facebook" title="Facebook">
+                <i class="fa-brands fa-facebook"></i>
+            </a>
+        </div>
+        
+        <h3>اختبار أيقونات أخرى:</h3>
+        <div style="text-align: center; font-size: 24px; margin: 20px 0;">
+            <i class="fa-solid fa-home"></i>
+            <i class="fa-solid fa-envelope"></i>
+            <i class="fa-solid fa-phone"></i>
+            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-star"></i>
+        </div>
+        
+        <div id="debug-info" style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 20px; font-family: monospace; font-size: 12px; white-space: pre-wrap;"></div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(checkIcons, 500);
+        });
+        
+        function checkIcons() {
+            const statusContainer = document.getElementById('status-container');
+            const debugInfo = document.getElementById('debug-info');
+            let allWorking = true;
+            let debugText = 'تقرير فحص الأيقونات:\n\n';
+            
+            // فحص الأيقونات الاجتماعية
+            const socialIcons = [
+                { class: 'fa-brands fa-instagram', name: 'Instagram' },
+                { class: 'fa-brands fa-x-twitter', name: 'X Twitter' },
+                { class: 'fa-brands fa-linkedin', name: 'LinkedIn' },
+                { class: 'fa-brands fa-facebook', name: 'Facebook' }
+            ];
+            
+            socialIcons.forEach(icon => {
+                const element = document.createElement('i');
+                element.className = icon.class;
+                element.style.position = 'absolute';
+                element.style.left = '-9999px';
+                document.body.appendChild(element);
+                
+                const beforeStyle = window.getComputedStyle(element, ':before');
+                const content = beforeStyle.getPropertyValue('content');
+                const fontFamily = beforeStyle.getPropertyValue('font-family');
+                
+                debugText += `${icon.name}:\n`;
+                debugText += `  - Class: ${icon.class}\n`;
+                debugText += `  - Content: ${content}\n`;
+                debugText += `  - Font Family: ${fontFamily}\n`;
+                
+                if (content === 'none' || content === '""' || content === 'normal') {
+                    debugText += `  - Status: ❌ لا تعمل\n\n`;
+                    allWorking = false;
+                } else {
+                    debugText += `  - Status: ✅ تعمل\n\n`;
+                }
+                
+                document.body.removeChild(element);
+            });
+            
+            // عرض النتيجة
+            if (allWorking) {
+                statusContainer.innerHTML = '<div class="status success">✅ جميع الأيقونات تعمل بشكل صحيح!</div>';
+            } else {
+                statusContainer.innerHTML = '<div class="status error">❌ بعض الأيقونات لا تعمل - راجع التفاصيل أدناه</div>';
+            }
+            
+            debugInfo.textContent = debugText;
+        }
+    </script>
+</body>
+</html>

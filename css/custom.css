@@ -100,6 +100,55 @@ body {
    display: none !important;
  }
 
+ /* تحسين أيقونات التواصل الاجتماعي */
+ .social-icon {
+   display: inline-flex !important;
+   align-items: center !important;
+   justify-content: center !important;
+   width: 40px !important;
+   height: 40px !important;
+   border-radius: 50% !important;
+   margin: 0 5px !important;
+   transition: all 0.3s ease !important;
+   text-decoration: none !important;
+   color: white !important;
+ }
+
+ .social-icon i {
+   font-size: 18px !important;
+   line-height: 1 !important;
+ }
+
+ /* ألوان أيقونات التواصل */
+ .h-bg-facebook { background-color: #1877f2 !important; }
+ .h-bg-x-twitter { background-color: #000000 !important; }
+ .h-bg-linkedin { background-color: #0077b5 !important; }
+ .h-bg-instagram { background-color: #e4405f !important; }
+
+ /* تأثيرات التفاعل */
+ .social-icon:hover {
+   transform: translateY(-2px) !important;
+   box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+ }
+
+ /* إصلاح مشكلة عدم ظهور الأيقونات */
+ [class*="fa-"]:before,
+ [class*=" fa-"]:before {
+   font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+   font-weight: 900 !important;
+   font-style: normal !important;
+   font-variant: normal !important;
+   text-rendering: auto !important;
+   -webkit-font-smoothing: antialiased !important;
+ }
+
+ .fa-brands:before,
+ .fab:before {
+   font-family: "Font Awesome 6 Brands" !important;
+   font-weight: 400 !important;
+ }
+ 
+
  /* تحسين ارتفاع العنوان بعد إخفاء الوصف */
  .feature-box .fbox-content {
    min-height: auto !important;

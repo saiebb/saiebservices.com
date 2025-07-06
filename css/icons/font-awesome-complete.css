@@ -1,0 +1,216 @@
+/*!
+ * Font Awesome Free 6.4.2 - Complete Version with Icon Definitions
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ * Copyright 2023 Fonticons, Inc.
+ */
+
+/* Font Face Definitions */
+@font-face {
+  font-family: "Font Awesome 6 Brands";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("font-awesome/fa-brands-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Font Awesome 6 Free";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("font-awesome/fa-regular-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Font Awesome 6 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("font-awesome/fa-solid-900.woff2") format("woff2");
+}
+
+/* Base Classes */
+.fa {
+  font-family: var(--fa-style-family, "Font Awesome 6 Free");
+  font-weight: var(--fa-style, 900);
+}
+
+.fa,
+.fa-brands,
+.fa-classic,
+.fa-regular,
+.fa-sharp,
+.fa-solid,
+.fab,
+.far,
+.fas {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: var(--fa-display, inline-block);
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-rendering: auto;
+}
+
+.fa-classic,
+.fa-regular,
+.fa-solid,
+.far,
+.fas {
+  font-family: "Font Awesome 6 Free";
+}
+
+.fa-brands,
+.fab {
+  font-family: "Font Awesome 6 Brands";
+  font-weight: 400;
+}
+
+/* Size Classes */
+.fa-1x { font-size: 1em; }
+.fa-2x { font-size: 2em; }
+.fa-3x { font-size: 3em; }
+.fa-lg { font-size: 1.25em; line-height: 0.05em; vertical-align: -0.075em; }
+.fa-sm { font-size: 0.875em; line-height: 0.07143em; vertical-align: 0.05357em; }
+.fa-xs { font-size: 0.75em; line-height: 0.08333em; vertical-align: 0.125em; }
+
+/* Social Media Icons - Brand Icons */
+.fa-instagram:before,
+.fa-brands.fa-instagram:before {
+  content: "\f16d";
+}
+
+.fa-x-twitter:before,
+.fa-brands.fa-x-twitter:before {
+  content: "\e61b";
+}
+
+.fa-twitter:before,
+.fa-brands.fa-twitter:before {
+  content: "\f099";
+}
+
+.fa-linkedin:before,
+.fa-brands.fa-linkedin:before {
+  content: "\f08c";
+}
+
+.fa-linkedin-in:before,
+.fa-brands.fa-linkedin-in:before {
+  content: "\f0e1";
+}
+
+.fa-facebook:before,
+.fa-brands.fa-facebook:before {
+  content: "\f09a";
+}
+
+.fa-facebook-f:before,
+.fa-brands.fa-facebook-f:before {
+  content: "\f39e";
+}
+
+.fa-whatsapp:before,
+.fa-brands.fa-whatsapp:before {
+  content: "\f232";
+}
+
+.fa-youtube:before,
+.fa-brands.fa-youtube:before {
+  content: "\f167";
+}
+
+.fa-telegram:before,
+.fa-brands.fa-telegram:before {
+  content: "\f2c6";
+}
+
+.fa-snapchat:before,
+.fa-brands.fa-snapchat:before {
+  content: "\f2ab";
+}
+
+.fa-tiktok:before,
+.fa-brands.fa-tiktok:before {
+  content: "\e07b";
+}
+
+/* Common Solid Icons */
+.fa-home:before { content: "\f015"; }
+.fa-envelope:before { content: "\f0e0"; }
+.fa-phone:before { content: "\f095"; }
+.fa-user:before { content: "\f007"; }
+.fa-building:before { content: "\f1ad"; }
+.fa-graduation-cap:before { content: "\f19d"; }
+.fa-chart-line:before { content: "\f201"; }
+.fa-caret-left:before { content: "\f0d9"; }
+.fa-caret-right:before { content: "\f0da"; }
+.fa-star:before { content: "\f005"; }
+.fa-edit:before { content: "\f044"; }
+.fa-search:before { content: "\f002"; }
+.fa-angle-up:before { content: "\f106"; }
+.fa-angle-left-b:before { content: "\f104"; }
+.fa-angle-right-b:before { content: "\f105"; }
+
+/* Utility Classes */
+.fa-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.fa-border {
+  border: 0.08em solid #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
+}
+
+.fa-pull-left {
+  float: left;
+  margin-right: 0.3em;
+}
+
+.fa-pull-right {
+  float: right;
+  margin-left: 0.3em;
+}
+
+/* Animation Classes */
+.fa-spin {
+  animation: fa-spin 2s infinite linear;
+}
+
+@keyframes fa-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Stack Classes */
+.fa-stack {
+  display: inline-block;
+  height: 2em;
+  line-height: 2em;
+  position: relative;
+  vertical-align: middle;
+  width: 2.5em;
+}
+
+.fa-stack-1x,
+.fa-stack-2x {
+  left: 0;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+
+.fa-stack-1x {
+  line-height: inherit;
+}
+
+.fa-stack-2x {
+  font-size: 2em;
+}
+
+.fa-inverse {
+  color: #fff;
+}
