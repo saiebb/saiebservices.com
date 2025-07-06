@@ -360,9 +360,16 @@ function showGoogleCustomerReviews(customerData) {
 function loadGoogleAPI() {
     if (typeof gapi === 'undefined') {
         const script = document.createElement('script');
-        script.src = 'https://apis.google.com/js/platform.js?onload=initGoogleAPI';
+        script.src = 'https://apis.google.com/js/platform.js';
         script.async = true;
         script.defer = true;
+        script.onload = function() {
+            console.log('✅ تم تحميل Google Platform API بنجاح');
+            initGoogleAPI();
+        };
+        script.onerror = function() {
+            console.error('❌ فشل في تحميل Google Platform API');
+        };
         document.head.appendChild(script);
     }
 }
@@ -382,6 +389,15 @@ document.addEventListener('DOMContentLoaded', function() {
         loadGoogleAPI();
     }
     loadGoogleRatingBadge();
+    
+    // إضافة timeout للتأكد من عرض شيء ما حتى لو فشل Google API
+    setTimeout(function() {
+        const badgeContainer = document.getElementById('google-reviews-badge');
+        if (badgeContainer && badgeContainer.innerHTML.includes('spinner-border')) {
+            console.warn('⏰ انتهت مهلة انتظار Google API - عرض المحتوى البديل');
+            showFallbackBadge();
+        }
+    }, 10000); // 10 ثوان
 });
 
 // تحميل وعرض شارة آراء العملاء عبر Google
@@ -396,9 +412,17 @@ function loadGoogleRatingBadge() {
     // تحميل Google API للشارة
     if (typeof gapi === 'undefined') {
         const script = document.createElement('script');
-        script.src = 'https://apis.google.com/js/platform.js?onload=renderGoogleBadge';
+        script.src = 'https://apis.google.com/js/platform.js';
         script.async = true;
         script.defer = true;
+        script.onload = function() {
+            console.log('✅ تم تحميل Google Platform API للشارة بنجاح');
+            setTimeout(renderGoogleBadge, 500);
+        };
+        script.onerror = function() {
+            console.error('❌ فشل في تحميل Google Platform API للشارة');
+            showFallbackBadge();
+        };
         document.head.appendChild(script);
     } else {
         renderGoogleBadge();
@@ -450,38 +474,56 @@ function renderGoogleBadge() {
                         
                     } else {
                         console.warn('⚠️ لم يتم عرض الشارة - قد لا تتوفر تقييمات');
-                        
-                        // عرض محتوى بديل جميل
-                        badgeContainer.innerHTML = `
-                            <div class="text-center py-4">
-                                <div class="mb-3">
-                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
-                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
-                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
-                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
-                                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
-                                </div>
-                                <h5 class="text-light mb-2">نحن في انتظار تقييمكم الكريم</h5>
-                                <p class="text-light opacity-75 mb-3">كونوا أول من يقيم خدماتنا المتميزة على Google</p>
-                                <a href="https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frTQ" 
-                                   target="_blank" 
-                                   class="btn btn-warning btn-sm rounded-pill px-4">
-                                    <i class="uil uil-star me-1"></i>
-                                    اترك تقييمك الآن
-                                </a>
-                            </div>
-                        `;
-                        
-                        console.log('ℹ️ تم عرض محتوى بديل جميل للشارة');
+                        showFallbackBadge();
                     }
                 }, 2000);
                 
             } catch (error) {
                 console.error('❌ خطأ في عرض شارة Google:', error);
+                showFallbackBadge();
             }
         });
     } else {
-        console.error('❌ Google API غير متوفر لعرض الشارة');
+        console.error('❌ Google API غير متوفر');
+        showFallbackBadge();
+    }
+}
+
+// عرض شارة بديلة في حالة فشل تحميل Google API
+function showFallbackBadge() {
+    const badgeContainer = document.getElementById('google-reviews-badge');
+    if (badgeContainer) {
+        console.log('🔄 عرض الشارة البديلة...');
+        
+        // عرض محتوى بديل جميل
+        badgeContainer.innerHTML = `
+            <div class="text-center py-4">
+                <div class="mb-3">
+                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+                    <i class="uil uil-star text-warning" style="font-size: 2.5rem; margin: 0 5px;"></i>
+             </div>
+                   <h5 class="text-light mb-2">نحن في انتظار تقييمكم الكريم</h5>
+                <p class="text-light opacity-75 mb-3">كونوا أول من يقيم خدماتنا المتميزة على Google</p>
+                <a href="https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frTQ" 
+                   target="_blank" 
+                   class="btn btn-warning btn-sm rounded-pill px-4">
+                    <i class="uil uil-star me-1"></i>
+                    اترك تقييمك الآن
+                </a>
+            </div>
+        `;
+        
+        // إضافة تأثير بصري للحاوي
+        const container = badgeContainer.closest('.google-badge-center-container');
+        if (container) {
+            container.style.background = 'rgba(255, 255, 255, 0.15)';
+            container.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+        }
+        
+        console.log('✅ تم عرض الشارة البديلة بنجاح');
     }
 }
 

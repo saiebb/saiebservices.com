@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار Google APIs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>اختبار Google APIs</h1>
+        
+        <div id="test-results">
+            <div class="status info">جاري اختبار Google APIs...</div>
+        </div>
+        
+        <div id="google-badge-test" style="margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+            <h3>اختبار شارة Google Reviews:</h3>
+            <div id="badge-container" style="min-height: 100px; text-align: center;">
+                <div style="padding: 20px;">جاري التحميل...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const resultsContainer = document.getElementById('test-results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            resultsContainer.appendChild(div);
+        }
+        
+        // اختبار تحميل Google Platform API
+        function testGoogleAPI() {
+            addResult('بدء اختبار Google Platform API...', 'info');
+            
+            const script = document.createElement('script');
+            script.src = 'https://apis.google.com/js/platform.js';
+            script.async = true;
+            script.defer = true;
+            
+            script.onload = function() {
+                addResult('✅ تم تحميل Google Platform API بنجاح!', 'success');
+                
+                // اختبار gapi
+                setTimeout(() => {
+                    if (typeof gapi !== 'undefined') {
+                        addResult('✅ متغير gapi متوفر!', 'success');
+                        testRatingBadge();
+                    } else {
+                        addResult('❌ متغير gapi غير متوفر!', 'error');
+                    }
+                }, 1000);
+            };
+            
+            script.onerror = function() {
+                addResult('❌ فشل في تحميل Google Platform API!', 'error');
+                addResult('السبب المحتمل: Content Security Policy أو مشكلة في الشبكة', 'warning');
+            };
+            
+            document.head.appendChild(script);
+            
+            // timeout للاختبار
+            setTimeout(() => {
+                if (typeof gapi === 'undefined') {
+                    addResult('⏰ انتهت مهلة انتظار Google API (10 ثوان)', 'warning');
+                }
+            }, 10000);
+        }
+        
+        // اختبار شارة التقييمات
+        function testRatingBadge() {
+            addResult('اختبار شارة Google Reviews...', 'info');
+            
+            if (typeof gapi !== 'undefined') {
+                gapi.load('ratingbadge', function() {
+                    addResult('✅ تم تحميل ratingbadge API!', 'success');
+                    
+                    try {
+                        const badgeContainer = document.getElementById('badge-container');
+                        gapi.ratingbadge.render(badgeContainer, {
+                            "merchant_id": 5349752399,
+                            "position": "BOTTOM_CENTER"
+                        });
+                        
+                        addResult('✅ تم استدعاء render بنجاح!', 'success');
+                        
+                        // التحقق من النتيجة بعد ثانيتين
+                        setTimeout(() => {
+                            const iframe = badgeContainer.querySelector('iframe');
+                            if (iframe) {
+                                addResult('✅ تم إنشاء iframe للشارة!', 'success');
+                            } else {
+                                addResult('⚠️ لم يتم إنشاء iframe - قد لا تتوفر تقييمات', 'warning');
+                            }
+                        }, 2000);
+                        
+                    } catch (error) {
+                        addResult('❌ خطأ في render: ' + error.message, 'error');
+                    }
+                });
+            } else {
+                addResult('❌ gapi غير متوفر لاختبار الشارة', 'error');
+            }
+        }
+        
+        // بدء الاختبار عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            testGoogleAPI();
+        });
+    </script>
+</body>
+</html>
