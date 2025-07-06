@@ -82,6 +82,8 @@
 	============================================= -->
 <script src="js/plugins.min.js"></script>
 <script src="js/functions.bundle.js"></script>
+<!-- Google APIs Monitor - مراقب خدمات Google -->
+<script src="js/google-apis-monitor.js"></script>
 
 
 <script>
@@ -409,20 +411,36 @@ function loadGoogleRatingBadge() {
         return;
     }
     
-    // تحميل Google API للشارة
+    // تحميل Google API للشارة مع timeout
     if (typeof gapi === 'undefined') {
         const script = document.createElement('script');
         script.src = 'https://apis.google.com/js/platform.js';
         script.async = true;
         script.defer = true;
+        
+        // إضافة timeout للتحميل
+        let scriptLoaded = false;
+        const loadTimeout = setTimeout(() => {
+            if (!scriptLoaded) {
+                console.error('❌ انتهت مهلة تحميل Google Platform API');
+                showFallbackBadge();
+            }
+        }, 10000); // 10 ثوان
+        
         script.onload = function() {
+            scriptLoaded = true;
+            clearTimeout(loadTimeout);
             console.log('✅ تم تحميل Google Platform API للشارة بنجاح');
-            setTimeout(renderGoogleBadge, 500);
+            setTimeout(renderGoogleBadge, 1000);
         };
+        
         script.onerror = function() {
+            scriptLoaded = true;
+            clearTimeout(loadTimeout);
             console.error('❌ فشل في تحميل Google Platform API للشارة');
             showFallbackBadge();
         };
+        
         document.head.appendChild(script);
     } else {
         renderGoogleBadge();
@@ -439,47 +457,57 @@ function renderGoogleBadge() {
         return;
     }
     
+    // التحقق من صحة معرف التاجر أولاً
+    const merchantId = 5349752399;
+    
+    // محاولة تحميل الشارة مع معالجة أفضل للأخطاء
     if (typeof gapi !== 'undefined') {
-        gapi.load('ratingbadge', function() {
-            try {
-                gapi.ratingbadge.render(badgeContainer, {
-                    "merchant_id": 5349752399,
-                    // إعدادات إضافية للشارة
-                    "position": "BOTTOM_CENTER"
-                });
-                console.log('✅ تم عرض شارة آراء العملاء عبر Google بنجاح');
-                
-                // إضافة CSS مخصص للشارة المركزية المحسنة
-                setTimeout(() => {
-                    const badgeIframe = badgeContainer.querySelector('iframe');
-                    if (badgeIframe) {
-                        // تطبيق التنسيق المحسن للشارة المركزية
-                        badgeIframe.style.width = '100%';
-                        badgeIframe.style.minWidth = '300px';
-                        badgeIframe.style.maxWidth = '450px';
-                        badgeIframe.style.height = 'auto';
-                        badgeIframe.style.minHeight = '80px';
-                        badgeIframe.style.borderRadius = '12px';
-                        badgeIframe.style.background = 'white';
-                        badgeIframe.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-                        
-                        console.log('🎨 تم تطبيق التنسيق المحسن للشارة المركزية');
-                        
-                        // إضافة تأثير بصري للحاوي
-                        const container = badgeContainer.closest('.google-badge-center-container');
-                        if (container) {
-                            container.style.background = 'rgba(255, 255, 255, 0.15)';
-                            container.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+        gapi.load('ratingbadge', {
+            callback: function() {
+                try {
+                    // التحقق من وجود التقييمات قبل العرض
+                    gapi.ratingbadge.render(badgeContainer, {
+                        "merchant_id": merchantId,
+                        "position": "BOTTOM_CENTER"
+                    });
+                    
+                    console.log('✅ تم عرض شارة آراء العملاء عبر Google بنجاح');
+                    
+                    // التحقق من نجاح العرض بعد فترة قصيرة
+                    setTimeout(() => {
+                        const badgeIframe = badgeContainer.querySelector('iframe');
+                        if (badgeIframe && badgeIframe.src && !badgeIframe.src.includes('404')) {
+                            // تطبيق التنسيق المحسن للشارة المركزية
+                            badgeIframe.style.width = '100%';
+                            badgeIframe.style.minWidth = '300px';
+                            badgeIframe.style.maxWidth = '450px';
+                            badgeIframe.style.height = 'auto';
+                            badgeIframe.style.minHeight = '80px';
+                            badgeIframe.style.borderRadius = '12px';
+                            badgeIframe.style.background = 'white';
+                            badgeIframe.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                            
+                            console.log('🎨 تم تطبيق التنسيق المحسن للشارة المركزية');
+                            
+                            // إضافة تأثير بصري للحاوي
+                            const container = badgeContainer.closest('.google-badge-center-container');
+                            if (container) {
+                                container.style.background = 'rgba(255, 255, 255, 0.15)';
+                                container.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                            }
+                        } else {
+                            console.warn('⚠️ لم يتم عرض الشارة بشكل صحيح - عرض المحتوى البديل');
+                            showFallbackBadge();
                         }
-                        
-                    } else {
-                        console.warn('⚠️ لم يتم عرض الشارة - قد لا تتوفر تقييمات');
-                        showFallbackBadge();
-                    }
-                }, 2000);
-                
-            } catch (error) {
-                console.error('❌ خطأ في عرض شارة Google:', error);
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('❌ خطأ في عرض شارة Google:', error);
+                    showFallbackBadge();
+                }
+            },
+            onerror: function() {
+                console.error('❌ فشل في تحميل Google Rating Badge API');
                 showFallbackBadge();
             }
         });

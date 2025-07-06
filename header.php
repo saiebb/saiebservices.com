@@ -13,13 +13,29 @@ $current_page = basename($_SERVER['PHP_SELF']);
     })(window,document,'script','dataLayer','GTM-NK4L62NP');</script>
     <!-- End Google Tag Manager -->
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PELEW7CW99"></script>
+    <!-- Google tag (gtag.js) مع معالجة أفضل للأخطاء -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PELEW7CW99" 
+            onerror="console.warn('فشل في تحميل Google Analytics')"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag(){
+            try {
+                dataLayer.push(arguments);
+            } catch (error) {
+                console.warn('خطأ في Google Analytics:', error);
+            }
+        }
         gtag('js', new Date());
-        gtag('config', 'G-PELEW7CW99');
+        
+        // تكوين Google Analytics مع معالجة الأخطاء
+        try {
+            gtag('config', 'G-PELEW7CW99', {
+                'transport_type': 'beacon',
+                'anonymize_ip': true
+            });
+        } catch (error) {
+            console.warn('خطأ في تكوين Google Analytics:', error);
+        }
     </script>
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
