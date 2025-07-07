@@ -91,6 +91,37 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{THE_REQUEST} \s(.+?)/+[?\s] [NC]
     RewriteRule ^(.+?)/+$ $1 [R=301,L]
+    
+    # إخفاء امتدادات الملفات PHP - Hide PHP file extensions
+    
+    # 1. إعادة توجيه الطلبات التي تحتوي على .php إلى الروابط بدون امتداد
+    # Redirect requests with .php extension to URLs without extension
+    # مثال: /about.php -> /about
+    RewriteCond %{THE_REQUEST} \s/+([^?]+)\.php[\s?] [NC]
+    RewriteRule ^ /%1 [R=301,L,NE]
+    
+    # 2. معالجة الطلبات بدون امتداد وتوجيهها إلى ملفات PHP المناسبة
+    # Handle requests without extension and internally map them to PHP files
+    # مثال: /about -> /about.php (داخلياً)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.+?)/?$ $1.php [QSA,L]
+    
+    # 3. معالجة الصفحة الرئيسية بشكل خاص
+    # Special handling for homepage
+    RewriteRule ^$ index.php [L]
+    
+    # 4. معالجة الروابط التي تحتوي على معلمات (مثل blog-single?id=123)
+    # Handle URLs with query parameters
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !\.php
+    RewriteCond %{QUERY_STRING} .+
+    RewriteRule ^([^/]+)$ $1.php [QSA,L]
+    
+    # 5. استثناء مجلد الإدارة من قواعد إخفاء الامتدادات
+    # Exclude admin directory from URL rewriting
+    RewriteRule ^saiebadmin25/ - [L]
 </IfModule>
 
 # MIME Types - أنواع الملفات
