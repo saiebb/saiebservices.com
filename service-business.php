@@ -1,4 +1,10 @@
 <?php
+// إضافة وسوم meta للـ SEO
+$pageTitle = "خدمات الأعمال | صيب لخدمات الاعمال";
+$pageDescription = "استكشف خدمات الأعمال المتميزة التي نقدمها في صيب لخدمات الاعمال. نساعد الشركات على النمو والتطور من خلال مجموعة متنوعة من الخدمات المهنية.";
+$pageKeywords = "صيب, خدمات اعمال, خدمات شركات, استشارات اعمال, تطوير اعمال";
+$canonicalUrl = "https://saiebservices.com/business-services";
+
 include 'header.php';
 include 'action/business.php';
 ?>
@@ -153,7 +159,7 @@ include 'action/business.php';
                                         </div>
                                     </div>
                                     
-                                    <a href="service-detail.php?id=<?php echo $rowscBusiness['ar_id']; ?>" 
+                                    <a href="<?php echo getServiceUrl($rowscBusiness['ar_id'], $rowscBusiness['ar_title'], 2); ?>" 
                                        class="service-btn">
                                         <i class="uil uil-shopping-cart"></i>
                                         اشترك الآن

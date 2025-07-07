@@ -1,4 +1,10 @@
 <?php
+// إضافة وسوم meta للـ SEO
+$pageTitle = "أحدث إنجازاتنا وأخبارنا | صيب لخدمات الاعمال";
+$pageDescription = "تعرف على أحدث إنجازات وأخبار صيب لخدمات الاعمال. نقدم لك آخر المستجدات والأخبار عن خدماتنا وإنجازاتنا.";
+$pageKeywords = "صيب, خدمات الاعمال, إنجازات, أخبار, مدونة";
+$canonicalUrl = "https://saiebservices.com/blog";
+
 include 'header.php';
 include "action/news_list.php";
 ?>
@@ -45,18 +51,17 @@ include "action/news_list.php";
                     <div class="grid-inner row g-0">
                         <div class="col-md-4">
                             <div class="entry-image">
-                                <a href="blog-single.php?id=<?php echo $rows["ar_id"]; ?>">
+                                <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>">
                                     <img src="images/<?php echo $rows["ar_image"]; ?>" class="news-list-img"
-                                        alt="Standard Post with Image" />
+                                        alt="<?php echo $rows["ar_title"]; ?>" />
                                 </a>
                             </div>
                         </div>
                         <div class="col-md-8 ps-md-4">
                             <div class="entry-title title-sm">
                                 <h2>
-                                    <a href="blog-single.php?id=<?php echo $rows["ar_id"]; ?>">
+                                    <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>">
                                         <?php echo $rows["ar_title"]; ?>
-
                                     </a>
                                 </h2>
                             </div>
@@ -66,7 +71,7 @@ include "action/news_list.php";
                                 </ul>
                             </div>
                             <div class="">
-                                <a href="blog-single.php?id=<?php echo $rows["ar_id"]; ?>">
+                                <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>">
                                     <p class="individual-list-text"><?php 
 												$text =  strip_tags($rows['ar_text'] ) ;
 												$words = explode(' ', $text);

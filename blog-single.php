@@ -1,6 +1,13 @@
 <?php
-include 'header.php';
 include 'action/news_item.php';
+
+// إضافة وسوم meta للـ SEO
+$pageTitle = $rows['ar_title'] . " | صيب لخدمات الاعمال";
+$pageDescription = strip_tags(substr($rows['ar_text'], 0, 160)) . "...";
+$pageKeywords = "صيب, خدمات الاعمال, " . $rows['ar_title'];
+$canonicalUrl = "https://saiebservices.com" . getBlogUrl($rows['ar_id'], $rows['ar_title']);
+
+include 'header.php';
 ?>
 
 <!-- Page Title
@@ -12,8 +19,8 @@ include 'action/news_item.php';
             <div class="page-title-content">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.php">الرئيســـية</a></li>
-                        <li class="breadcrumb-item"><a href="blog.php">الانجازات</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo getStaticPageUrl('home'); ?>">الرئيســـية</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo getStaticPageUrl('blog'); ?>">الانجازات</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><?php echo $rows['ar_title'] ?></li>
                     </ol>
                 </nav>

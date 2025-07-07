@@ -87,31 +87,131 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
+    # استثناء مجلد الإدارة من قواعد إعادة الكتابة
+    # Exclude admin directory from URL rewriting
+    RewriteRule ^saiebadmin25/ - [L]
+    
     # Remove trailing slash from non-directory URLs
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{THE_REQUEST} \s(.+?)/+[?\s] [NC]
     RewriteRule ^(.+?)/+$ $1 [R=301,L]
     
-    # إخفاء امتدادات الملفات PHP - Hide PHP file extensions
+    # 1. روابط SEO للمقالات والخدمات - SEO Friendly URLs for articles and services
     
-    # 1. إعادة توجيه الطلبات التي تحتوي على .php إلى الروابط بدون امتداد
+    # المقالات - Blog articles
+    # مثال: /blog/article-title-123 -> blog-single.php?id=123
+    RewriteRule ^blog/([a-zA-Z0-9_-]+)-([0-9]+)/?$ blog-single.php?id=$2 [L,QSA]
+    
+    # خدمات الأعمال - Business services
+    # مثال: /business-services/service-title-123 -> service-detail.php?id=123&type=2
+    RewriteRule ^business-services/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2&type=2 [L,QSA]
+    
+    # خدمات الأفراد - Individual services
+    # مثال: /individual-services/service-title-123 -> service-detail.php?id=123&type=3
+    RewriteRule ^individual-services/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2&type=3 [L,QSA]
+    
+    # الخدمات المالية - Financial services
+    # مثال: /financial-services/service-title-123 -> service-detail.php?id=123&type=4
+    RewriteRule ^financial-services/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2&type=4 [L,QSA]
+    
+    # التدريب - Training programs
+    # مثال: /training-programs/program-title-123 -> service-detail.php?id=123&type=1
+    RewriteRule ^training-programs/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2&type=1 [L,QSA]
+    
+    # المكتبة - Library items
+    # مثال: /library/document-title-123 -> library-detail.php?id=123
+    RewriteRule ^library/([a-zA-Z0-9_-]+)-([0-9]+)/?$ library-detail.php?id=$2 [L,QSA]
+    
+    # الخدمات العامة - Generic services
+    # مثال: /service/item-123 -> service-detail.php?id=123
+    RewriteRule ^service/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2 [L,QSA]
+    
+    # 2. أسماء معبرة للصفحات الثابتة - SEO Friendly URLs for static pages
+    # الصفحة الرئيسية - Homepage
+    RewriteRule ^home/?$ index.php [L]
+    
+    # صفحة من نحن - About page
+    RewriteRule ^about-us/?$ about.php [L]
+    
+    # صفحة اتصل بنا - Contact page
+    RewriteRule ^contact-us/?$ contact.php [L]
+    
+    # صفحة التدريب - Training page
+    RewriteRule ^training-programs/?$ training.php [L]
+    
+    # صفحة الخدمات المالية - Financial services page
+    RewriteRule ^financial-services/?$ financial.php [L]
+    
+    # صفحة خدمات الأعمال - Business services page
+    RewriteRule ^business-services/?$ service-business.php [L]
+    
+    # صفحة خدمات الأفراد - Individual services page
+    RewriteRule ^individual-services/?$ service-individual.php [L]
+    
+    # صفحة المكتبة - Library page
+    RewriteRule ^library/?$ library_cat.php [L]
+    
+    # صفحة المدونة - Blog page
+    RewriteRule ^blog/?$ blog.php [L]
+    
+    # صفحة البحث - Search page
+    RewriteRule ^search/?$ search.php [L]
+    
+    # 3. إعادة توجيه الروابط القديمة إلى الروابط الجديدة
+    # Redirect old URLs to new URLs
+    
+    # إعادة توجيه مباشر للروابط القديمة إلى الروابط الجديدة
+    # Direct redirect from old URLs to new URLs
+    
+    # إعادة توجيه blog-single.php?id=X إلى /blog/article-X
+    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    RewriteRule ^blog-single\.php$ /blog/article-%2? [R=301,L]
+    
+    # إعادة توجيه service-detail.php?id=X&type=2 إلى /business-services/service-X
+    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    RewriteCond %{QUERY_STRING} (^|&)type=2(&|$) [NC]
+    RewriteRule ^service-detail\.php$ /business-services/service-%2? [R=301,L]
+    
+    # إعادة توجيه service-detail.php?id=X&type=3 إلى /individual-services/service-X
+    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    RewriteCond %{QUERY_STRING} (^|&)type=3(&|$) [NC]
+    RewriteRule ^service-detail\.php$ /individual-services/service-%2? [R=301,L]
+    
+    # إعادة توجيه service-detail.php?id=X&type=4 إلى /financial-services/service-X
+    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    RewriteCond %{QUERY_STRING} (^|&)type=4(&|$) [NC]
+    RewriteRule ^service-detail\.php$ /financial-services/service-%2? [R=301,L]
+    
+    # إعادة توجيه service-detail.php?id=X&type=1 إلى /training-programs/program-X
+    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    RewriteCond %{QUERY_STRING} (^|&)type=1(&|$) [NC]
+    RewriteRule ^service-detail\.php$ /training-programs/program-%2? [R=301,L]
+    
+    # إعادة توجيه service-detail.php?id=X (بدون type) إلى /service/item-X
+    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    RewriteCond %{QUERY_STRING} !(^|&)type= [NC]
+    RewriteRule ^service-detail\.php$ /service/item-%2? [R=301,L]
+    
+    # 4. إخفاء امتدادات الملفات PHP - Hide PHP file extensions
+    
+    # إعادة توجيه الطلبات التي تحتوي على .php إلى الروابط بدون امتداد
     # Redirect requests with .php extension to URLs without extension
     # مثال: /about.php -> /about
     RewriteCond %{THE_REQUEST} \s/+([^?]+)\.php[\s?] [NC]
     RewriteRule ^ /%1 [R=301,L,NE]
     
-    # 2. معالجة الطلبات بدون امتداد وتوجيهها إلى ملفات PHP المناسبة
+    # 5. معالجة الطلبات بدون امتداد وتوجيهها إلى ملفات PHP المناسبة
     # Handle requests without extension and internally map them to PHP files
     # مثال: /about -> /about.php (داخلياً)
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME}.php -f
     RewriteRule ^(.+?)/?$ $1.php [QSA,L]
     
-    # 3. معالجة الصفحة الرئيسية بشكل خاص
+    # 6. معالجة الصفحة الرئيسية بشكل خاص
     # Special handling for homepage
     RewriteRule ^$ index.php [L]
     
-    # 4. معالجة الروابط التي تحتوي على معلمات (مثل blog-single?id=123)
+    # 7. معالجة الروابط التي تحتوي على معلمات (مثل blog-single?id=123)
     # Handle URLs with query parameters
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -119,9 +219,10 @@
     RewriteCond %{QUERY_STRING} .+
     RewriteRule ^([^/]+)$ $1.php [QSA,L]
     
-    # 5. استثناء مجلد الإدارة من قواعد إخفاء الامتدادات
-    # Exclude admin directory from URL rewriting
-    RewriteRule ^saiebadmin25/ - [L]
+    # 8. ضمان وصول الملفات الثابتة (CSS, JS, Images) بشكل صحيح
+    # Ensure static files (CSS, JS, Images) are accessible correctly
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(.*)$ $1 [L]
 </IfModule>
 
 # MIME Types - أنواع الملفات

@@ -1,4 +1,10 @@
 <?php
+// إضافة وسوم meta للـ SEO
+$pageTitle = "خدمات الأفراد والمنشآت | صيب لخدمات الاعمال";
+$pageDescription = "اكتشف خدمات الأفراد والمنشآت المتميزة التي نقدمها في صيب لخدمات الاعمال. نوفر حلولاً مخصصة تلبي احتياجات الأفراد والمنشآت الصغيرة.";
+$pageKeywords = "صيب, خدمات افراد, خدمات منشآت, استشارات افراد, تطوير منشآت";
+$canonicalUrl = "https://saiebservices.com/individual-services";
+
 include 'header.php';
 include 'action/individual.php';
 include 'action/individual-cat.php';
@@ -190,7 +196,7 @@ include 'action/individual-cat.php';
                                         </div>
                                     </div>
                                     
-                                    <a href="service-detail.php?id=<?php echo $rowscIndividual['ar_id']; ?>" 
+                                    <a href="<?php echo getServiceUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title'], 3); ?>" 
                                        class="service-btn">
                                         <i class="uil uil-shopping-cart"></i>
                                         اشترك الآن

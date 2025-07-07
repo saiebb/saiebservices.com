@@ -1,4 +1,10 @@
 <?php
+// إضافة وسوم meta للـ SEO
+$pageTitle = "برامج التدريب | صيب لخدمات الاعمال";
+$pageDescription = "استكشف برامج التدريب المتميزة التي نقدمها في صيب لخدمات الاعمال. نوفر تدريبات متخصصة تساعدك على تطوير مهاراتك وتحقيق أهدافك المهنية.";
+$pageKeywords = "صيب, تدريب, برامج تدريبية, تطوير مهارات, دورات تدريبية";
+$canonicalUrl = "https://saiebservices.com/training-programs";
+
 include 'header.php';
 include 'action/training.php';
 ?>
@@ -149,7 +155,7 @@ include 'action/training.php';
                                         </div>
                                     </div>
                                     
-                                    <a href="service-detail.php?id=<?php echo $rowscTraining['ar_id']; ?>" 
+                                    <a href="<?php echo getServiceUrl($rowscTraining['ar_id'], $rowscTraining['ar_title'], 1); ?>" 
                                        class="service-btn">
                                         <i class="uil uil-shopping-cart"></i>
                                         اشترك الآن

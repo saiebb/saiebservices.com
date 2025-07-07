@@ -1,6 +1,38 @@
 <?php
-include 'header.php';
 include 'action/service_item.php';
+
+// إضافة وسوم meta للـ SEO
+$pageTitle = $rows['ar_title'] . " | صيب لخدمات الاعمال";
+$pageDescription = strip_tags(substr($rows['ar_text'], 0, 160)) . "...";
+
+// تحديد نوع الخدمة للكلمات المفتاحية
+$serviceType = "";
+switch ($rows['ar_type']) {
+    case 1:
+        $serviceType = "تدريب";
+        $canonicalUrl = "https://saiebservices.com" . getServiceUrl($rows['ar_id'], $rows['ar_title'], 1);
+        break;
+    case 2:
+        $serviceType = "خدمات اعمال";
+        $canonicalUrl = "https://saiebservices.com" . getServiceUrl($rows['ar_id'], $rows['ar_title'], 2);
+        break;
+    case 3:
+        $serviceType = "خدمات افراد ومنشآت";
+        $canonicalUrl = "https://saiebservices.com" . getServiceUrl($rows['ar_id'], $rows['ar_title'], 3);
+        break;
+    case 4:
+    case 6:
+        $serviceType = "استشارات مالية";
+        $canonicalUrl = "https://saiebservices.com" . getServiceUrl($rows['ar_id'], $rows['ar_title'], 4);
+        break;
+    default:
+        $serviceType = "خدمات";
+        $canonicalUrl = "https://saiebservices.com/service-detail?id=" . $rows['ar_id'];
+}
+
+$pageKeywords = "صيب, " . $serviceType . ", " . $rows['ar_title'];
+
+include 'header.php';
 ?>
 
 <!-- Page Title
@@ -12,12 +44,12 @@ include 'action/service_item.php';
             <div class="page-title-content">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.php">الرئيســـية</a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo getStaticPageUrl('home'); ?>">الرئيســـية</a></li>
                         <li class="breadcrumb-item">
                             <?php
 if($rows['ar_type'] == 1 ){
 ?>
-                            <a href="training.php">التدريب</a>
+                            <a href="<?php echo getStaticPageUrl('training'); ?>">التدريب</a>
                             <?php
 }
 ?>
@@ -27,7 +59,7 @@ if($rows['ar_type'] == 1 ){
                             <?php
 if($rows['ar_type'] == 2 ){
 ?>
-                            <a href="service-business.php">خدمات الاعمال</a>
+                            <a href="<?php echo getStaticPageUrl('business'); ?>">خدمات الاعمال</a>
                             <?php
 }
 ?>
@@ -36,16 +68,16 @@ if($rows['ar_type'] == 2 ){
                             <?php
 if($rows['ar_type'] == 3 ){
 ?>
-                            <a href="service-business.php"> خدمات افراد ومنشآت </a>
+                            <a href="<?php echo getStaticPageUrl('individual'); ?>"> خدمات افراد ومنشآت </a>
                             <?php
 }
 ?>
 
 
                             <?php
-if($rows['ar_type'] == 6 ){
+if($rows['ar_type'] == 4 || $rows['ar_type'] == 6 ){
 ?>
-                            <a href="financial.php"> الاستشـــارات المالية </a>
+                            <a href="<?php echo getStaticPageUrl('financial'); ?>"> الاستشـــارات المالية </a>
                             <?php
 }
 ?>

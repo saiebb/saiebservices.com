@@ -1,4 +1,10 @@
 <?php
+// إضافة وسوم meta للـ SEO
+$pageTitle = "الاستشارات المالية | صيب لخدمات الاعمال";
+$pageDescription = "استفد من خدمات الاستشارات المالية المتخصصة التي نقدمها في صيب لخدمات الاعمال. نساعدك على تحقيق أهدافك المالية من خلال استشارات احترافية.";
+$pageKeywords = "صيب, استشارات مالية, خدمات مالية, تخطيط مالي, استشارات ضريبية";
+$canonicalUrl = "https://saiebservices.com/financial-services";
+
 include 'header.php';
 include 'action/financial.php';
 ?>
@@ -74,7 +80,7 @@ while ($rowscfinancial = $reultfinancial->fetch_assoc()) {
          echo $shortenedText." ...";  
            ?> </p>
                         </div>
-                        <a href="service-detail.php?id=<?php echo $rowscfinancial['ar_id'];  ?>"
+                        <a href="<?php echo getServiceUrl($rowscfinancial['ar_id'], $rowscfinancial['ar_title'], 4); ?>"
                             class="button button-rounded button-reveal button-large width96  tleft"><span>
                                 اشــترك الآن</span><i class="uil uil-money-bill "></i></a>
                     </div>

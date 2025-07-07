@@ -1,10 +1,21 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF']);
+
+// تضمين ملف المسار الأساسي
+include_once 'action/base.php';
+
+// تضمين ملف وظائف الروابط SEO
+include_once 'action/seo_url.php';
 ?>
 <!DOCTYPE html>
 <html dir="rtl" lang="en-US">
 
 <head>
+    <!-- Base URL -->
+    <base href="<?php echo BASE_URL; ?>/"
+    <!-- Base URL for JavaScript -->
+    <script src="<?php echo ASSETS_URL; ?>/js/base-url.js"></script>
+    
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -55,22 +66,22 @@ $current_page = basename($_SERVER['PHP_SELF']);
         rel="stylesheet" />
 
     <!-- Core Style -->
-    <link rel="stylesheet" href="style-rtl.css" />
+    <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>/style-rtl.css" />
 
     <!-- Font Icons -->
-    <link rel="stylesheet" href="css/font-icons.css" />
+    <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>/css/font-icons.css" />
     
     <!-- Font Awesome CDN as fallback -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <!-- Social Icons Fix -->
-    <link rel="stylesheet" href="css/social-icons-fix.css" />
+    <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>/css/social-icons-fix.css" />
 
     <!-- Plugins/Components CSS -->
-    <link rel="stylesheet" href="css/swiper.css" />
+    <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>/css/swiper.css" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/custom.css" />
+    <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>/css/custom.css" />
     
     <!-- Google Customer Reviews Badge CSS -->
     <style>
@@ -221,9 +232,33 @@ $current_page = basename($_SERVER['PHP_SELF']);
         }
     </style>
 
-    <!-- Document Title
+    <!-- Document Title & Meta Tags
 	============================================= -->
-    <title>صيب لخدمات الاعمال</title>
+    <title><?php echo isset($pageTitle) ? $pageTitle : 'صيب لخدمات الاعمال'; ?></title>
+    
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="<?php echo isset($pageDescription) ? $pageDescription : 'صيب لخدمات الاعمال - نقدم خدمات متميزة للأفراد والشركات في مجالات متعددة بما في ذلك الاستشارات المالية والتدريب وخدمات الأعمال.'; ?>">
+    <meta name="keywords" content="<?php echo isset($pageKeywords) ? $pageKeywords : 'صيب, خدمات اعمال, استشارات مالية, تدريب, خدمات افراد, خدمات شركات'; ?>">
+    
+    <!-- Canonical URL -->
+    <?php if (isset($canonicalUrl)): ?>
+    <link rel="canonical" href="<?php echo $canonicalUrl; ?>">
+    <?php else: ?>
+    <link rel="canonical" href="<?php echo BASE_URL . $_SERVER['REQUEST_URI']; ?>">
+    <?php endif; ?>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="<?php echo isset($pageTitle) ? $pageTitle : 'صيب لخدمات الاعمال'; ?>">
+    <meta property="og:description" content="<?php echo isset($pageDescription) ? $pageDescription : 'صيب لخدمات الاعمال - نقدم خدمات متميزة للأفراد والشركات في مجالات متعددة بما في ذلك الاستشارات المالية والتدريب وخدمات الأعمال.'; ?>">
+    <meta property="og:url" content="<?php echo isset($canonicalUrl) ? $canonicalUrl : BASE_URL . '/'; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="<?php echo BASE_URL; ?>/images/logo.png">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo isset($pageTitle) ? $pageTitle : 'صيب لخدمات الاعمال'; ?>">
+    <meta name="twitter:description" content="<?php echo isset($pageDescription) ? $pageDescription : 'صيب لخدمات الاعمال - نقدم خدمات متميزة للأفراد والشركات في مجالات متعددة بما في ذلك الاستشارات المالية والتدريب وخدمات الأعمال.'; ?>">
+    <meta name="twitter:image" content="<?php echo BASE_URL; ?>/images/logo.png">
 </head>
 
 <body class="stretched rtl">
@@ -244,8 +279,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 
               <div id="logo">
-                <a href="index.php">
-                  <img src="images/logo.png" alt="" />
+                <a href="<?php echo getStaticPageUrl('home'); ?>">
+                  <img src="<?php echo ASSETS_URL; ?>/images/logo.png" alt="صيب لخدمات الاعمال" />
                 </a>
               </div>
 
@@ -265,12 +300,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
               <nav class="primary-menu">
                 <ul class="menu-container">
                   <li class="menu-item">
-                    <a class="menu-link <?=($current_page == 'index.php') ? 'active-link' : ''?>" href="index.php">
+                    <a class="menu-link <?=($current_page == 'index.php') ? 'active-link' : ''?>" href="<?php echo getStaticPageUrl('home'); ?>">
                       <div>الرئيســـية</div>
                     </a>
                   </li>
                   <li class="menu-item">
-                    <a class="menu-link <?=($current_page == 'about.php') ? 'active-link' : ''?>" href="about.php">
+                    <a class="menu-link <?=($current_page == 'about.php') ? 'active-link' : ''?>" href="<?php echo getStaticPageUrl('about'); ?>">
                       <div>من نحن</div>
                     </a>
                   </li>
@@ -281,22 +316,22 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                     <ul class="sub-menu-container">
                       <li class="menu-item">
-                        <a class="menu-link" href="training.php">
+                        <a class="menu-link" href="<?php echo getStaticPageUrl('training'); ?>">
                           <div>التدريب</div>
                         </a>
                       </li>
                       <li class="menu-item">
-                        <a class="menu-link" href="service-business.php">
+                        <a class="menu-link" href="<?php echo getStaticPageUrl('business'); ?>">
                           <div>خدمات الاعمــال</div>
                         </a>
                       </li>
                       <li class="menu-item">
-                        <a class="menu-link" href="service-individual.php">
+                        <a class="menu-link" href="<?php echo getStaticPageUrl('individual'); ?>">
                           <div>خدمات الأفراد و المنشآت</div>
                         </a>
                       </li>
                       <li class="menu-item">
-                        <a class="menu-link" href="financial.php">
+                        <a class="menu-link" href="<?php echo getStaticPageUrl('financial'); ?>">
                           <div>الاستشـــارات المالية   </div>
                         </a>
                       </li>

@@ -14,7 +14,7 @@
                             تقييمات عملائنا على Google
                             <i class="uil uil-star text-warning ms-2"></i>
                         </h5>
-                        <div id="google-reviews-badge" class="google-badge-center-container">
+                        <!-- <div id="google-reviews-badge" class="google-badge-center-container">
                             <div class="d-flex justify-content-center align-items-center" style="min-height: 100px;">
                                 <div class="text-center">
                                     <div class="spinner-border text-primary mb-2" role="status">
@@ -23,7 +23,7 @@
                                     <p class="text-light mb-0">جاري تحميل التقييمات...</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         
                         <!-- رابط لترك تقييم -->
                         <div class="text-center mt-3">
@@ -77,13 +77,17 @@
 
 <!-- JavaScripts
 	============================================= -->
-<script src="js/plugins.min.js"></script>
-<script src="js/functions.bundle.js"></script>
+<!-- تحميل ملفات JavaScript بمسارات مطلقة -->
+<script src="<?php echo ASSETS_URL; ?>/js/plugins.min.js"></script>
+<script src="<?php echo ASSETS_URL; ?>/js/functions.bundle.js"></script>
 <!-- Google APIs Monitor - مراقب خدمات Google -->
-<script src="js/google-apis-monitor.js"></script>
+<script src="<?php echo ASSETS_URL; ?>/js/google-apis-monitor.js"></script>
 
 <!-- Icons Fallback Script - حل احتياطي للأيقونات -->
-<script src="js/icons-fallback.js"></script>
+<script src="<?php echo ASSETS_URL; ?>/js/icons-fallback.js"></script>
+
+<!-- jQuery Validate - للتحقق من النماذج -->
+<script src="<?php echo ASSETS_URL; ?>/js/jquery.validate.js"></script>
 
 
 <script>
@@ -579,6 +583,6 @@ window.renderOptIn = function() {
 
 <!-- whatsapp -->
 <div class="whatsapp">
-    <a href="https://wa.me/+966502418121" target="_blank"><img src="images/whatsapp.png" alt="" class="whatsapp-img"></a>
+    <a href="https://wa.me/+966502418121" target="_blank"><img src="<?php echo ASSETS_URL; ?>/images/whatsapp.png" alt="" class="whatsapp-img"></a>
 </div>
 <!-- EOF whatsapp -->

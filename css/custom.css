@@ -788,7 +788,7 @@ body {
     overflow: hidden;
     position: relative;
     margin-bottom: 30px;
-    height: 100%;
+    height: 90%;
     display: flex;
     flex-direction: column;
 }
@@ -802,7 +802,7 @@ body {
 .service-image {
     position: relative;
     overflow: hidden;
-    height: 200px; /* تقليل ارتفاع الصورة - Reduced image height */
+    height: 210px; /* تقليل ارتفاع الصورة - Reduced image height */
 }
 
 .service-image img {
@@ -853,7 +853,7 @@ body {
     font-weight: 600;
     color: #2c3e50;
     margin-bottom: 2px; /* تقليل المسافة السفلية للعنوان بشكل أكبر - Further reduced bottom margin for title */
-    line-height: 1.2; /* تقليل ارتفاع السطر بشكل أكبر - Further reduced line height */
+    line-height: 1.4; /* تقليل ارتفاع السطر بشكل أكبر - Further reduced line height */
     min-height: 32px; /* تقليل الارتفاع الأدنى بشكل كبير - Significantly reduced minimum height */
     display: -webkit-box;
     -webkit-line-clamp: 2;

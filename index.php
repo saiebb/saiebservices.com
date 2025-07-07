@@ -1,4 +1,10 @@
 <?php
+// إضافة وسوم meta للـ SEO
+$pageTitle = "صيب لخدمات الاعمال | خدمات متميزة للأفراد والشركات";
+$pageDescription = "صيب لخدمات الاعمال - نقدم خدمات متميزة للأفراد والشركات في مجالات متعددة بما في ذلك الاستشارات المالية والتدريب وخدمات الأعمال.";
+$pageKeywords = "صيب, خدمات اعمال, استشارات مالية, تدريب, خدمات افراد, خدمات شركات";
+$canonicalUrl = "https://saiebservices.com/";
+
 include 'header.php';
 include 'action/slider.php';
 include 'action/clients.php';
@@ -247,8 +253,8 @@ while ($rowsLatestNews = $reultLatestNews->fetch_assoc()) {
                 <div class="col-lg-3 col-md-6">
                     <div class="entry">
                         <div class="entry-image">
-                            <a href="blog-single.php?id=<?php echo $rowsLatestNews["ar_id"]; ?>"><img
-                                    src="images/<?php echo $rowsLatestNews["ar_image"]; ?>" alt="Image"
+                            <a href="<?php echo getBlogUrl($rowsLatestNews["ar_id"], $rowsLatestNews["ar_title"]); ?>"><img
+                                    src="images/<?php echo $rowsLatestNews["ar_image"]; ?>" alt="<?php echo $rowsLatestNews["ar_title"]; ?>"
                                     class="rounded news-home-img img-fluid" /></a>
                         </div>
 
@@ -259,9 +265,8 @@ while ($rowsLatestNews = $reultLatestNews->fetch_assoc()) {
                         </div>
                         <div class="entry-title title-xs text-transform-none px-2">
                             <h3 class="training-list-title">
-                                <a href="blog-single.php?id=<?php echo $rowsLatestNews["ar_id"]; ?>">
+                                <a href="<?php echo getBlogUrl($rowsLatestNews["ar_id"], $rowsLatestNews["ar_title"]); ?>">
                                     <?php echo $rowsLatestNews["ar_title"]; ?>
-
                                 </a>
                             </h3>
                         </div>
