@@ -17,9 +17,8 @@ var BASE_URL = (function() {
     
     // إذا كان الموقع في بيئة التطوير المحلية (localhost)
     if (urlParts[2].includes('localhost') || urlParts[2].includes('127.0.0.1')) {
-        // استخدام المسار الكامل للمجلد الحالي
-        var path = urlParts[3] ? '/' + urlParts[3] : '';
-        return urlParts[0] + '//' + urlParts[2] + path;
+        // استخدام المسار الأساسي فقط بدون مجلدات فرعية لتجنب مشاكل SEO URLs
+        return urlParts[0] + '//' + urlParts[2];
     } else {
         // في بيئة الإنتاج، استخدم المجال الرئيسي فقط
         return 'https://saiebservices.com';

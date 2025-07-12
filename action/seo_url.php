@@ -10,6 +10,11 @@
 // Extract ID from URL
 if (!function_exists('extractIdFromUrl')) {
     function extractIdFromUrl($path) {
+        // التحقق من وجود المسار
+        if (empty($path)) {
+            return false;
+        }
+        
         // استخراج معرف المقال من الرابط مثل /blog/article-title-123
         if (preg_match('/\/blog\/[a-zA-Z0-9_-]+-([0-9]+)$/', $path, $matches)) {
             $_GET['id'] = $matches[1];
@@ -53,8 +58,10 @@ if (!function_exists('extractIdFromUrl')) {
         return false;
     }
     
-    // تطبيق الوظيفة على الرابط الحالي
-    extractIdFromUrl($_SERVER['REQUEST_URI']);
+    // تطبيق الوظيفة على الرابط الحالي (فقط في بيئة الويب)
+    if (isset($_SERVER['REQUEST_URI'])) {
+        extractIdFromUrl($_SERVER['REQUEST_URI']);
+    }
 }
 
 /**
@@ -65,7 +72,41 @@ if (!function_exists('extractIdFromUrl')) {
  * @return string النص بعد التحويل
  */
 function slugify($text) {
-    // تحويل الأحرف العربية إلى أحرف إنجليزية (اختياري)
+    // كلمات التوقف العربية التي يجب حذفها
+    $arabic_stop_words = [
+        'في', 'من', 'إلى', 'على', 'عن', 'مع', 'بعد', 'قبل', 'عند', 'لدى',
+        'بين', 'خلال', 'أمام', 'خلف', 'تحت', 'فوق', 'ضد', 'حول', 'دون', 'حتى',
+        'لكن', 'لكن', 'غير', 'سوى', 'عدا', 'خلا', 'حاشا', 'فقط', 'قد', 'لقد',
+        'كان', 'أن', 'إن', 'ذلك', 'التي', 'الذي', 'اللتان', 'اللذان', 'اللتين', 'اللذين',
+        'اللاتي', 'اللواتي', 'ما', 'هو', 'هي', 'هم', 'هن', 'أنت', 'أنتم', 'أنتن',
+        'نحن', 'أنا', 'هذا', 'هذه', 'هؤلاء', 'ذاك', 'تلك', 'أولئك', 'ال', 'للـ', 'بـ'
+    ];
+    
+    // كلمات التوقف الإنجليزية التي يجب حذفها
+    $english_stop_words = [
+        'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from',
+        'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the',
+        'to', 'was', 'will', 'with', 'the', 'this', 'but', 'they', 'have',
+        'had', 'what', 'when', 'where', 'who', 'which', 'why', 'how'
+    ];
+    
+    // تحويل النص إلى أحرف صغيرة للمعالجة
+    $text_lower = mb_strtolower($text, 'UTF-8');
+    
+    // حذف كلمات التوقف العربية
+    foreach ($arabic_stop_words as $word) {
+        $text_lower = preg_replace('/\b' . preg_quote($word, '/') . '\b/u', '', $text_lower);
+    }
+    
+    // حذف كلمات التوقف الإنجليزية
+    foreach ($english_stop_words as $word) {
+        $text_lower = preg_replace('/\b' . preg_quote($word, '/') . '\b/i', '', $text_lower);
+    }
+    
+    // تنظيف المسافات المتعددة
+    $text = preg_replace('/\s+/', ' ', trim($text_lower));
+    
+    // تحويل الأحرف العربية إلى أحرف إنجليزية
     $arabic_replacements = [
         'أ' => 'a', 'إ' => 'a', 'آ' => 'a', 'ا' => 'a',
         'ب' => 'b', 'ت' => 't', 'ث' => 'th',
@@ -90,12 +131,19 @@ function slugify($text) {
     // استبدال المسافات بشرطات
     $text = preg_replace('/[\s-]+/', '-', $text);
     
-    // تحويل إلى أحرف صغيرة
+    // تحويل إلى أحرف صغيرة وإزالة الشرطات من البداية والنهاية
     $text = strtolower(trim($text, '-'));
+    
+    // التحقق من طول الرابط (يفضل ألا يتجاوز 60 حرف)
+    if (strlen($text) > 60) {
+        $text = substr($text, 0, 60);
+        // إزالة آخر كلمة جزئية
+        $text = substr($text, 0, strrpos($text, '-'));
+    }
     
     // إذا كان النص فارغًا، استخدم قيمة افتراضية
     if (empty($text)) {
-        return 'item';
+        return 'service';
     }
     
     return $text;
@@ -106,16 +154,53 @@ function slugify($text) {
  * Generate URL for a blog article
  * 
  * @param int $id معرف المقال
- * @param string $title عنوان المقال
+ * @param string $title عنوان المقال (اختياري - للتوافق مع الكود القديم)
+ * @param string $slug الـ slug المحفوظ في قاعدة البيانات (اختياري)
  * @return string الرابط النهائي
  */
-function getBlogUrl($id, $title) {
-    $slug = slugify($title);
-    // إذا كان العنوان فارغًا، استخدم "article" كقيمة افتراضية
-    if (empty($slug)) {
-        $slug = "article";
+function getBlogUrl($id, $title = '', $slug = '') {
+    $relativePath = '';
+    
+    // إذا تم تمرير slug، استخدمه مباشرة
+    if (!empty($slug)) {
+        $relativePath = "/blog/{$slug}-{$id}";
+    } else {
+        // إذا لم يتم تمرير slug، جلبه من قاعدة البيانات
+        global $conn;
+        if ($conn) {
+            $stmt = $conn->prepare("SELECT ar_slug FROM sa_articles WHERE ar_id = ? LIMIT 1");
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($row = $result->fetch_assoc()) {
+                if (!empty($row['ar_slug'])) {
+                    $relativePath = "/blog/{$row['ar_slug']}-{$id}";
+                }
+            }
+        }
+        
+        // إذا لم يوجد slug في قاعدة البيانات، أنشئه من العنوان (للتوافق مع الكود القديم)
+        if (empty($relativePath) && !empty($title)) {
+            $generated_slug = slugify($title);
+            if (empty($generated_slug)) {
+                $generated_slug = "article";
+            }
+            $relativePath = "/blog/{$generated_slug}-{$id}";
+        }
+        
+        // قيمة افتراضية
+        if (empty($relativePath)) {
+            $relativePath = "/blog/article-{$id}";
+        }
     }
-    return "/blog/{$slug}-{$id}";
+    
+    // إذا كان BASE_URL معرف، استخدمه لإنشاء الرابط الكامل
+    if (defined('BASE_URL')) {
+        return BASE_URL . $relativePath;
+    }
+    
+    return $relativePath;
 }
 
 /**
@@ -147,19 +232,32 @@ function getServiceUrl($id, $title, $type) {
         }
     }
     
+    $relativePath = '';
     switch ($type) {
         case 1:
-            return "/training-programs/{$slug}-{$id}";
+            $relativePath = "/training-programs/{$slug}-{$id}";
+            break;
         case 2:
-            return "/business-services/{$slug}-{$id}";
+            $relativePath = "/business-services/{$slug}-{$id}";
+            break;
         case 3:
-            return "/individual-services/{$slug}-{$id}";
+            $relativePath = "/individual-services/{$slug}-{$id}";
+            break;
         case 4:
         case 6:
-            return "/financial-services/{$slug}-{$id}";
+            $relativePath = "/financial-services/{$slug}-{$id}";
+            break;
         default:
-            return "/service/{$slug}-{$id}";
+            $relativePath = "/service/{$slug}-{$id}";
+            break;
     }
+    
+    // إذا كان BASE_URL معرف، استخدمه لإنشاء الرابط الكامل
+    if (defined('BASE_URL')) {
+        return BASE_URL . $relativePath;
+    }
+    
+    return $relativePath;
 }
 
 /**
@@ -172,7 +270,14 @@ function getServiceUrl($id, $title, $type) {
  */
 function getLibraryUrl($id, $title) {
     $slug = slugify($title);
-    return "/library/{$slug}-{$id}";
+    $relativePath = "/library/{$slug}-{$id}";
+    
+    // إذا كان BASE_URL معرف، استخدمه لإنشاء الرابط الكامل
+    if (defined('BASE_URL')) {
+        return BASE_URL . $relativePath;
+    }
+    
+    return $relativePath;
 }
 
 /**
@@ -196,5 +301,12 @@ function getStaticPageUrl($page) {
         'search' => '/search'
     ];
     
-    return isset($urls[$page]) ? $urls[$page] : "/{$page}";
+    $relativePath = isset($urls[$page]) ? $urls[$page] : "/{$page}";
+    
+    // إذا كان BASE_URL معرف، استخدمه لإنشاء الرابط الكامل
+    if (defined('BASE_URL')) {
+        return BASE_URL . $relativePath;
+    }
+    
+    return $relativePath;
 }

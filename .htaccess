@@ -91,6 +91,10 @@
     # Exclude admin directory from URL rewriting
     RewriteRule ^saiebadmin25/ - [L]
     
+    # اختبار قواعد إعادة الكتابة - يجب أن يكون في المقدمة
+    RewriteRule ^test-simple$ test-rewrite.php [L]
+    RewriteRule ^test-individual/(.*)$ test-rewrite.php?test=$1 [L,QSA]
+    
     # Remove trailing slash from non-directory URLs
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{THE_REQUEST} \s(.+?)/+[?\s] [NC]
@@ -167,25 +171,29 @@
     RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
     RewriteRule ^blog-single\.php$ /blog/article-%2? [R=301,L]
     
+    # تعطيل إعادة التوجيه المؤقت لخدمات الأعمال لحل مشكلة الروابط
     # إعادة توجيه service-detail.php?id=X&type=2 إلى /business-services/service-X
-    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    RewriteCond %{QUERY_STRING} (^|&)type=2(&|$) [NC]
-    RewriteRule ^service-detail\.php$ /business-services/service-%2? [R=301,L]
+    # RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    # RewriteCond %{QUERY_STRING} (^|&)type=2(&|$) [NC]
+    # RewriteRule ^service-detail\.php$ /business-services/service-%2? [R=301,L]
     
+    # تعطيل إعادة التوجيه المؤقت لخدمات الأفراد لحل مشكلة الروابط
     # إعادة توجيه service-detail.php?id=X&type=3 إلى /individual-services/service-X
-    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    RewriteCond %{QUERY_STRING} (^|&)type=3(&|$) [NC]
-    RewriteRule ^service-detail\.php$ /individual-services/service-%2? [R=301,L]
+    # RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    # RewriteCond %{QUERY_STRING} (^|&)type=3(&|$) [NC]
+    # RewriteRule ^service-detail\.php$ /individual-services/service-%2? [R=301,L]
     
+    # تعطيل إعادة التوجيه المؤقت للخدمات المالية لحل مشكلة الروابط
     # إعادة توجيه service-detail.php?id=X&type=4 إلى /financial-services/service-X
-    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    RewriteCond %{QUERY_STRING} (^|&)type=4(&|$) [NC]
-    RewriteRule ^service-detail\.php$ /financial-services/service-%2? [R=301,L]
+    # RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    # RewriteCond %{QUERY_STRING} (^|&)type=4(&|$) [NC]
+    # RewriteRule ^service-detail\.php$ /financial-services/service-%2? [R=301,L]
     
+    # تعطيل إعادة التوجيه المؤقت لبرامج التدريب لحل مشكلة الروابط
     # إعادة توجيه service-detail.php?id=X&type=1 إلى /training-programs/program-X
-    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    RewriteCond %{QUERY_STRING} (^|&)type=1(&|$) [NC]
-    RewriteRule ^service-detail\.php$ /training-programs/program-%2? [R=301,L]
+    # RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
+    # RewriteCond %{QUERY_STRING} (^|&)type=1(&|$) [NC]
+    # RewriteRule ^service-detail\.php$ /training-programs/program-%2? [R=301,L]
     
     # إعادة توجيه service-detail.php?id=X (بدون type) إلى /service/item-X
     RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]

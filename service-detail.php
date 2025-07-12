@@ -1,4 +1,15 @@
 <?php
+// تتبع للتشخيص - إجباري
+error_log("DEBUG: service-detail.php accessed");
+error_log("DEBUG: REQUEST_URI = " . $_SERVER['REQUEST_URI']);
+error_log("DEBUG: GET parameters = " . print_r($_GET, true));
+
+// محاولة كتابة ملف تتبع
+$debug_content = "DEBUG: service-detail.php accessed at " . date('Y-m-d H:i:s') . "\n";
+$debug_content .= "DEBUG: REQUEST_URI = " . $_SERVER['REQUEST_URI'] . "\n";
+$debug_content .= "DEBUG: GET parameters = " . print_r($_GET, true) . "\n";
+file_put_contents('debug.log', $debug_content, FILE_APPEND | LOCK_EX);
+
 include 'action/service_item.php';
 
 // إضافة وسوم meta للـ SEO

@@ -12,7 +12,7 @@ include_once 'action/seo_url.php';
 
 <head>
     <!-- Base URL -->
-    <base href="<?php echo BASE_URL; ?>/"
+    <base href="<?php echo BASE_URL; ?>/">
     <!-- Base URL for JavaScript -->
     <script src="<?php echo ASSETS_URL; ?>/js/base-url.js"></script>
     

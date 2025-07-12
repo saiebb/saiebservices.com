@@ -15,20 +15,40 @@ function getBaseUrl() {
     // تحديد المسار الأساسي
     $baseUrl = $protocol . '://' . $host;
     
-    // إذا كان الموقع في بيئة التطوير المحلية (localhost)
-    if ($host === 'localhost' || strpos($host, '127.0.0.1') !== false) {
-        // استخدام المسار الكامل للمجلد الحالي
+    // التحقق من البيئة المحلية بشكل أكثر شمولية
+    $isLocal = false;
+    $localHosts = ['localhost', '127.0.0.1', '::1'];
+    
+    foreach ($localHosts as $localHost) {
+        if (strpos($host, $localHost) !== false) {
+            $isLocal = true;
+            break;
+        }
+    }
+    
+    // التحقق أيضاً من أي مضيف يحتوي على .local أو يبدأ بـ 192.168
+    if (!$isLocal && (strpos($host, '.local') !== false || strpos($host, '192.168') === 0)) {
+        $isLocal = true;
+    }
+    
+    if ($isLocal) {
+        // في البيئة المحلية، استخدم المسار الكامل
         $scriptName = $_SERVER['SCRIPT_NAME'];
         $scriptDir = dirname($scriptName);
         
-        // إذا كان المجلد ليس الجذر (/)، أضفه إلى المسار الأساسي
+        // إذا كان المجلد ليس الجذر، أضفه إلى المسار
         if ($scriptDir !== '/' && $scriptDir !== '\\') {
+            // تنظيف المسار من الشرطات المائلة المتكررة
+            $scriptDir = str_replace('\\', '/', $scriptDir);
             $baseUrl .= $scriptDir;
         }
     } else {
-        // في بيئة الإنتاج، استخدم المجال الرئيسي فقط
-        // يمكن تعديل هذا حسب هيكل الموقع الفعلي
-        $baseUrl = 'https://saiebservices.com';
+        // في بيئة الإنتاج فقط، استخدم المجال الرئيسي
+        // التحقق من أن النطاق هو النطاق الفعلي للموقع
+        if (strpos($host, 'saiebservices.com') !== false) {
+            $baseUrl = 'https://saiebservices.com';
+        }
+        // وإلا استخدم المضيف الحالي (للنطاقات الفرعية أو النطاقات البديلة)
     }
     
     return rtrim($baseUrl, '/');
