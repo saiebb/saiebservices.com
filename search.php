@@ -80,14 +80,14 @@ while ($rowscIndividual = $resultIndividual->fetch_assoc()) {
 
     if ($rowscIndividual['ar_type'] == 4) {
         ?>
-                                <a href="blog-single.php?id=<?php echo $rowscIndividual['ar_id']; ?>">
+                                <a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title']); ?>">
                                     <img src="images/<?php echo $rowscIndividual['ar_image']; ?>" alt="Image"
                                         class="card-img-top img-fluid">
                                 </a>
                                 <?php
 } else {
         ?>
-                                <a href="service-detail.php?id=<?php echo $rowscIndividual['ar_id']; ?>">
+                                <a href="<?php echo getServiceUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title'], $rowscIndividual['ar_type']); ?>">
                                     <img src="images/<?php echo $rowscIndividual['ar_image']; ?>" alt="Image"
                                         class="card-img-top img-fluid">
                                 </a>
@@ -141,13 +141,13 @@ switch ($rowscIndividual['ar_type']) {
 
     if ($rowscIndividual['ar_type'] == 4) {
         ?>
-                                            <a href="blog-single.php?id=<?php echo $rowscIndividual['ar_id']; ?>"
+                                            <a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title']); ?>"
                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="<?php echo $rowscIndividual['ar_title']; ?>">
                                                 <?php
 } else {
         ?>
-                                                <a href="service-detail.php?id=<?php echo $rowscIndividual['ar_id']; ?>"
+                                                <a href="<?php echo getServiceUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title'], $rowscIndividual['ar_type']); ?>"
                                                     data-bs-toggle="tooltip" data-bs-placement="top"
                                                     title="<?php echo $rowscIndividual['ar_title']; ?>">
                                                     <?php

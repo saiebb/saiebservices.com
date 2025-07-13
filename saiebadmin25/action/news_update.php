@@ -1,6 +1,7 @@
 <?php
 include 'db.php';
 include_once "resize_class.php";
+include_once "../../action/seo_url.php"; // تضمين ملف الـ slug
 
 $tableName = $prefix . "articles";
 $ar_title = strip_tags($_POST['ar_title']);
@@ -9,6 +10,7 @@ $ar_text = $_POST['ar_text'];
 $ar_status = strip_tags($_POST['ar_status']);
 $ar_id = strip_tags($_POST['ar_id']);
 $ar_blog_type = strip_tags($_POST['ar_blog_type']);
+$ar_slug = slugify($ar_title); // إنشاء الـ slug
 
 // pic 1
 if ($_FILES["ar_image"]["name"] != '') {
@@ -44,6 +46,7 @@ if ($_FILES["ar_image"]["name"] != '') {
 set
 ar_title = '$ar_title' ,
 ar_date =  '$ar_date' ,
+ar_slug = '$ar_slug',
 ar_text =  '$ar_text',
 ar_image = '$new_file_name1',
 ar_blog_type = '$ar_blog_type',
@@ -57,6 +60,7 @@ ar_id = " . $ar_id;
 set
 ar_title = '$ar_title' ,
 ar_date =  '$ar_date' ,
+ar_slug = '$ar_slug',
 ar_text =  '$ar_text',
 ar_blog_type = '$ar_blog_type',
 ar_status =  '$ar_status'

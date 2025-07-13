@@ -21,8 +21,8 @@ if ($_FILES["ar_image"]["name"] != '') {
     // Check if image file is a actual image or fake image
 
     // Allow certain file formats
-    if ($imageFileType == "jpg" || $imageFileType || "png" || $imageFileType || "jpeg"
-        && $imageFileType || "gif") {
+    $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+    if (in_array($imageFileType, $allowed_types)) {
 
         if (move_uploaded_file($_FILES["ar_image"]["tmp_name"], $target_file)) {
             $file_full_path = $target_dir . $filename;

@@ -77,7 +77,7 @@ while ($rowscIndividual = $resultIndividual->fetch_assoc()) {
 
 <div class="entry col-lg-4 col-md-6">
 							<div class="grid-inner shadow-sm card rounded-5">
-                            <a href="blog-single.php?id=<?php echo $rowscIndividual['ar_id']; ?>">
+                            <a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title']); ?>">
 									<img src="images/<?php echo $rowscIndividual['ar_image']; ?>" alt="Image" class="card-img-top img-fluid">
 								</a>
 								<div class="p-3">
@@ -90,29 +90,13 @@ while ($rowscIndividual = $resultIndividual->fetch_assoc()) {
 									</div>
                                     <div class="entry-title">
 
-										<h3 class=" blog3-title"><a href="blog-single.php?id=<?php echo $rowscIndividual['ar_id']; ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="<?php echo $rowscIndividual['ar_title']; ?>" >
-                                        <?php
-$text = strip_tags($rowscIndividual['ar_title']);
-    $words = explode(' ', $text);
-    $firstTwentyWords = array_slice($words, 0, 8);
-    $shortenedText = implode(' ', $firstTwentyWords);
-    echo $shortenedText;
-    if (count($firstTwentyWords) > 7) {
-        echo " ...";
-    }
-
-    ?>
+										<h3 class=" blog3-title"><a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title']); ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="<?php echo $rowscIndividual['ar_title']; ?>" >
+                                        <?php echo truncate_words($rowscIndividual['ar_title'], 8); ?>
                                     </a></h3>
 									</div>
 									<div class="entry-content blog3-content">
 										<p class="mb-0">
-                                        <?php
-$text = strip_tags($rowscIndividual['ar_text']);
-    $words = explode(' ', $text);
-    $firstTwentyWords = array_slice($words, 0, 13);
-    $shortenedText = implode(' ', $firstTwentyWords);
-    echo $shortenedText . " ...";
-    ?>
+                                        <?php echo truncate_words($rowscIndividual['ar_text'], 13); ?>
                                         </p>
 									</div>
 								</div>

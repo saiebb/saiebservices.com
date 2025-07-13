@@ -1,6 +1,7 @@
 <?php
 include 'db.php';
 include_once "resize_class.php";
+include_once "../../action/seo_url.php"; // تضمين ملف الـ slug
 
 $tableName = $prefix . "articles";
 $ar_title = strip_tags($_POST['ar_title']);
@@ -8,6 +9,7 @@ $ar_date = strip_tags($_POST['ar_date']);
 $ar_blog_type = strip_tags($_POST['ar_blog_type']);
 $ar_text = $_POST['ar_text'];
 $ar_status = strip_tags($_POST['ar_status']);
+$ar_slug = slugify($ar_title); // إنشاء الـ slug
 // upload files
 // pic 1
 if ($_FILES["ar_image"]["name"] != '') {
@@ -19,9 +21,9 @@ if ($_FILES["ar_image"]["name"] != '') {
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     // Check if image file is a actual image or fake image
 
-    // Allow certain file formats
-    if ($imageFileType == "jpg" || $imageFileType || "png" || $imageFileType || "jpeg"
-        && $imageFileType || "gif") {
+    // Allow certain file formats (Corrected logic)
+    $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+    if (in_array($imageFileType, $allowed_types)) {
 
         if (move_uploaded_file($_FILES["ar_image"]["tmp_name"], $target_file)) {
             $file_full_path = $target_dir . $filename;
@@ -44,11 +46,16 @@ if ($_FILES["ar_image"]["name"] != '') {
 
 
 $sql = "INSERT INTO $tableName
-    ( `ar_type`,  `ar_title`, `ar_date` ,  `ar_blog_type` , `ar_text`, `ar_image` ,`ar_status`)
+    ( `ar_type`,  `ar_title`, `ar_slug`, `ar_date` ,  `ar_blog_type` , `ar_text`, `ar_image` ,`ar_status`)
     VALUES
-    ( 4 , '$ar_title', '$ar_date' , '$ar_blog_type' , '$ar_text','$new_file_name1',  '$ar_status');";
+    ( ?, ?, ?, ?, ?, ?, ?, ?)";
 
-if ($conn->query($sql)) {
+$stmt = $conn->prepare($sql);
+$ar_type = 4; // نوع المقال
+$stmt->bind_param("isssissi", $ar_type, $ar_title, $ar_slug, $ar_date, $ar_blog_type, $ar_text, $new_file_name1, $ar_status);
+
+
+if ($stmt->execute()) {
     header("location:../news.php?s=1");
 } else {
     header("location:../news-add.php?e=1");

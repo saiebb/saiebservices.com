@@ -80,7 +80,7 @@ include "action/news_list.php";
 												echo $shortenedText." ...";  
 												?> </p>
                                 </a>
-                                <a href="blog-single.php?id=<?php echo $rows["ar_id"]; ?>" class="more-link"> المزيد</a>
+                                <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>" class="more-link"> المزيد</a>
                             </div>
                         </div>
                     </div>
