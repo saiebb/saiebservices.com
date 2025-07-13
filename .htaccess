@@ -13,7 +13,7 @@
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
     # Content Security Policy (CSP) - محسن للخدمات الخارجية مع حل مشاكل الأذونات
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://www.gstatic.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://apis.google.com https://www.googleapis.com https://www.google.com; frame-src https://www.google.com https://apis.google.com https://www.gstatic.com; child-src https://www.google.com https://apis.google.com; object-src 'none';"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://www.gstatic.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://apis.google.com https://www.googleapis.com https://www.google.com; frame-src https://www.google.com https://apis.google.com https://www.gstatic.com; child-src https://www.google.com https://apis.google.com; object-src 'none';"
     
     # Permissions Policy - إعدادات الأذونات لحل مشاكل unload
     Header always set Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), unload=()"
@@ -141,25 +141,25 @@
     RewriteRule ^contact-us/?$ contact.php [L]
     
     # صفحة التدريب - Training page
-    RewriteRule ^training-programs/?$ training.php [L]
+    RewriteRule ^training-programs/?$ training.php [L,QSA]
     
     # صفحة الخدمات المالية - Financial services page
-    RewriteRule ^financial-services/?$ financial.php [L]
+    RewriteRule ^financial-services/?$ financial.php [L,QSA]
     
     # صفحة خدمات الأعمال - Business services page
-    RewriteRule ^business-services/?$ service-business.php [L]
+    RewriteRule ^business-services/?$ service-business.php [L,QSA]
     
     # صفحة خدمات الأفراد - Individual services page
-    RewriteRule ^individual-services/?$ service-individual.php [L]
+    RewriteRule ^individual-services/?$ service-individual.php [L,QSA]
     
     # صفحة المكتبة - Library page
-    RewriteRule ^library/?$ library_cat.php [L]
+    RewriteRule ^library/?$ library_cat.php [L,QSA]
     
     # صفحة المدونة - Blog page
-    RewriteRule ^blog/?$ blog.php [L]
+    RewriteRule ^blog/?$ blog.php [L,QSA]
     
     # صفحة البحث - Search page
-    RewriteRule ^search/?$ search.php [L]
+    RewriteRule ^search/?$ search.php [L,QSA]
     
     # 3. إعادة توجيه الروابط القديمة إلى الروابط الجديدة
     # Redirect old URLs to new URLs

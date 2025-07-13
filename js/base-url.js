@@ -17,8 +17,21 @@ var BASE_URL = (function() {
     
     // إذا كان الموقع في بيئة التطوير المحلية (localhost)
     if (urlParts[2].includes('localhost') || urlParts[2].includes('127.0.0.1')) {
-        // استخدام المسار الأساسي فقط بدون مجلدات فرعية لتجنب مشاكل SEO URLs
-        return urlParts[0] + '//' + urlParts[2];
+        // تحديد المسار الأساسي مع المجلد الفرعي إذا كان موجوداً
+        var pathParts = window.location.pathname.split('/');
+        var basePath = '';
+        
+        // البحث عن مجلد saieb في المسار
+        for (var i = 1; i < pathParts.length; i++) {
+            if (pathParts[i] === 'saieb' || pathParts[i] === '') {
+                if (pathParts[i] === 'saieb') {
+                    basePath = '/saieb';
+                }
+                break;
+            }
+        }
+        
+        return urlParts[0] + '//' + urlParts[2] + basePath;
     } else {
         // في بيئة الإنتاج، استخدم المجال الرئيسي فقط
         return 'https://saiebservices.com';

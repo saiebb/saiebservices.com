@@ -33,10 +33,3 @@ if (isset($_GET['cat'])) {
 
 $totalResults = $conn->query($sql22)->fetch_assoc()['total'];
 $totalPages = ceil($totalResults / $resultsPerPage);
-
-// Determine the current page
-if (isset($_GET['page']) && is_numeric($_GET['page'])) {
-    $currentPage = (int)$_GET['page'];
-} else {
-    $currentPage = 1;
-}

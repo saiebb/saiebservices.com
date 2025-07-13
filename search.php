@@ -213,9 +213,10 @@ $text = strip_tags($rowscIndividual['ar_text']);
         <ul class="pagination mt-5 pagination-circle justify-content-center">
             <?php
 $catParam = isset($_GET['cat']) ? '&cat=' . $_GET['cat'] : '';
+$basePageUrl = BASE_URL . '/search';
 if ($currentPage > 1): ?>
             <li class="page-item"><a class="page-link"
-                    href="?q=<?php echo $_GET['q']; ?>&page=<?php echo $currentPage - 1 . $catParam; ?>"><i
+                    href="<?php echo $basePageUrl; ?>?q=<?php echo $_GET['q']; ?>&page=<?php echo $currentPage - 1 . $catParam; ?>"><i
                         class="uil uil-angle-right-b"></i></a></li>
             <?php else: ?>
             <li class="page-item disabled"><a class="page-link" href="#"><i class="uil uil-angle-right-b"></i></a></li>
@@ -225,13 +226,13 @@ if ($currentPage > 1): ?>
             <li class="page-item <?php if ($i == $currentPage) {
     echo 'active';
 }
-?>"><a class="page-link" href="?q=<?php echo $_GET['q']; ?>&page=<?php echo $i . $catParam; ?>"><?php echo $i; ?></a>
+?>"><a class="page-link" href="<?php echo $basePageUrl; ?>?q=<?php echo $_GET['q']; ?>&page=<?php echo $i . $catParam; ?>"><?php echo $i; ?></a>
             </li>
             <?php endfor;?>
 
             <?php if ($currentPage < $totalPages): ?>
             <li class="page-item"><a class="page-link"
-                    href="?q=<?php echo $_GET['q']; ?>&page=<?php echo $currentPage + 1 . $catParam; ?>"><i
+                    href="<?php echo $basePageUrl; ?>?q=<?php echo $_GET['q']; ?>&page=<?php echo $currentPage + 1 . $catParam; ?>"><i
                         class="uil uil-angle-left-b"></i></a></li>
             <?php else: ?>
             <li class="page-item disabled"><a class="page-link" href="#"><i class="uil uil-angle-left-b"></i></a></li>

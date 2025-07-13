@@ -173,8 +173,10 @@ include 'action/training.php';
         <!-- Pagination
         ============================================= -->
         <ul class="pagination mt-5 pagination-circle justify-content-center">
-            <?php if ($currentPage > 1): ?>
-            <li class="page-item"><a class="page-link" href="?page=<?php echo $currentPage - 1; ?>"><i
+            <?php 
+            $basePageUrl = BASE_URL . '/training-programs';
+            if ($currentPage > 1): ?>
+            <li class="page-item"><a class="page-link" href="<?php echo $basePageUrl; ?>?page=<?php echo $currentPage - 1; ?>"><i
                         class="uil uil-angle-right-b"></i></a></li>
             <?php else: ?>
             <li class="page-item disabled"><a class="page-link" href="#"><i class="uil uil-angle-right-b"></i></a></li>
@@ -182,11 +184,11 @@ include 'action/training.php';
 
             <?php for ($i = 1; $i <= $totalPages; $i++): ?>
             <li class="page-item <?php if ($i == $currentPage) echo 'active'; ?>"><a class="page-link"
-                    href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                    href="<?php echo $basePageUrl; ?>?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
             <?php endfor; ?>
 
             <?php if ($currentPage < $totalPages): ?>
-            <li class="page-item"><a class="page-link" href="?page=<?php echo $currentPage + 1; ?>"><i
+            <li class="page-item"><a class="page-link" href="<?php echo $basePageUrl; ?>?page=<?php echo $currentPage + 1; ?>"><i
                         class="uil uil-angle-left-b"></i></a></li>
             <?php else: ?>
             <li class="page-item disabled"><a class="page-link" href="#"><i class="uil uil-angle-left-b"></i></a></li>

@@ -96,8 +96,10 @@ include "action/news_list.php";
             <!-- Pagination
 					============================================= -->
             <ul class="pagination mt-5 pagination-circle justify-content-center">
-                <?php if ($page > 1): ?>
-                <li class="page-item"><a class="page-link" href="?page=<?php echo $page - 1; ?>"><i
+                <?php 
+                $basePageUrl = BASE_URL . '/blog';
+                if ($page > 1): ?>
+                <li class="page-item"><a class="page-link" href="<?php echo $basePageUrl; ?>?page=<?php echo $page - 1; ?>"><i
                             class="uil uil-angle-right-b"></i></a></li>
                 <?php else: ?>
                 <li class="page-item disabled"><a class="page-link" href="#"><i class="uil uil-angle-right-b"></i></a>
@@ -106,11 +108,11 @@ include "action/news_list.php";
 
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                 <li class="page-item <?php if ($i == $page) echo 'active'; ?>"><a class="page-link"
-                        href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                        href="<?php echo $basePageUrl; ?>?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
                 <?php endfor; ?>
 
                 <?php if ($page < $totalPages): ?>
-                <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 1; ?>"><i
+                <li class="page-item"><a class="page-link" href="<?php echo $basePageUrl; ?>?page=<?php echo $page + 1; ?>"><i
                             class="uil uil-angle-left-b"></i></a></li>
                 <?php else: ?>
                 <li class="page-item disabled"><a class="page-link" href="#"><i class="uil uil-angle-left-b"></i></a>

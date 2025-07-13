@@ -223,25 +223,26 @@ include 'action/individual-cat.php';
         <ul class="pagination mt-5 pagination-circle justify-content-center">
             <?php 
     $catParam = isset($_GET['cat']) ? '&cat=' . $_GET['cat'] : '';
+    $basePageUrl = BASE_URL . '/individual-services';
     if ($currentPage > 1): ?>
-            <li class="page-item"><a class="page-link" href="?page=<?php echo $currentPage - 1 . $catParam; ?>"><i
+            <li class="page-item"><a class="page-link" href="<?php echo $basePageUrl; ?>?page=<?php echo $currentPage - 1 . $catParam; ?>"><i
                         class="uil uil-angle-right-b"></i></a></li>
             <?php else: ?>
             <li class="page-item disabled"><a class="page-link" href="#"><i class="uil uil-angle-right-b"></i></a></li>
             <?php endif; ?>
 
             <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-            <li class="page-item <?php if ($i == $currentPage) echo 'active'; ?>"><a class="page-link"
-                    href="?page=<?php echo $i . $catParam; ?>"><?php echo $i; ?></a></li>
-            <?php endfor; ?>
+        <li class="page-item <?php if ($i == $currentPage) echo 'active'; ?>"><a class="page-link"
+                href="<?php echo $basePageUrl; ?>?page=<?php echo $i . $catParam; ?>"><?php echo $i; ?></a></li>
+        <?php endfor; ?>
 
-            <?php if ($currentPage < $totalPages): ?>
-            <li class="page-item"><a class="page-link" href="?page=<?php echo $currentPage + 1 . $catParam; ?>"><i
-                        class="uil uil-angle-left-b"></i></a></li>
-            <?php else: ?>
-            <li class="page-item disabled"><a class="page-link" href="#"><i class="uil uil-angle-left-b"></i></a></li>
-            <?php endif; ?>
-        </ul>
+        <?php if ($currentPage < $totalPages): ?>
+        <li class="page-item"><a class="page-link" href="<?php echo $basePageUrl; ?>?page=<?php echo ($currentPage + 1) . $catParam; ?>"><i
+                    class="uil uil-angle-left-b"></i></a></li>
+        <?php else: ?>
+        <li class="page-item disabled"><a class="page-link" href="#"><i class="uil uil-angle-left-b"></i></a></li>
+        <?php endif; ?>
+    </ul>
 
 
         <a href="contact.php" class="button button-full text-center text-end mt-6 footer-stick">
