@@ -23,8 +23,8 @@ if ($_FILES["ar_image"]["name"] != '') {
     // Check if image file is a actual image or fake image
 
     // Allow certain file formats
-    if ($imageFileType == "jpg" || $imageFileType || "png" || $imageFileType || "jpeg"
-        && $imageFileType || "gif") {
+    $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+    if (in_array($imageFileType, $allowed_types)) {
 
         if (move_uploaded_file($_FILES["ar_image"]["tmp_name"], $target_file)) {
             $file_full_path = $target_dir . $filename;
@@ -42,35 +42,19 @@ if ($_FILES["ar_image"]["name"] != '') {
         $new_file_name1 = "noimage.png";
     }
 
-    $sql = "update $tableName
-set
-ar_title = '$ar_title' ,
-ar_date =  '$ar_date' ,
-ar_slug = '$ar_slug',
-ar_text =  '$ar_text',
-ar_image = '$new_file_name1',
-ar_blog_type = '$ar_blog_type',
-ar_status =  '$ar_status'
-where
-ar_id = " . $ar_id;
+    $sql = "UPDATE $tableName SET ar_title = ?, ar_date = ?, ar_slug = ?, ar_text = ?, ar_image = ?, ar_blog_type = ?, ar_status = ? WHERE ar_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssiii", $ar_title, $ar_date, $ar_slug, $ar_text, $new_file_name1, $ar_blog_type, $ar_status, $ar_id);
 
 } else {
 
-    $sql = "update $tableName
-set
-ar_title = '$ar_title' ,
-ar_date =  '$ar_date' ,
-ar_slug = '$ar_slug',
-ar_text =  '$ar_text',
-ar_blog_type = '$ar_blog_type',
-ar_status =  '$ar_status'
-where
-ar_id = " . $ar_id;
+    $sql = "UPDATE $tableName SET ar_title = ?, ar_date = ?, ar_slug = ?, ar_text = ?, ar_blog_type = ?, ar_status = ? WHERE ar_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssiii", $ar_title, $ar_date, $ar_slug, $ar_text, $ar_blog_type, $ar_status, $ar_id);
 }
-echo $sql;
 // check if email already exist
 
-if ($conn->query($sql)) {
+if ($stmt->execute()) {
   
     ?>
    <script> window.location.href = "../news.php?s=3"; </script>

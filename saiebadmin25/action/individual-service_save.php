@@ -1,6 +1,7 @@
 <?php
 include 'db.php';
 include_once "resize_class.php";
+include_once "../../action/seo_url.php";
 
 $tableName = $prefix . "articles";
 $ar_title = strip_tags($_POST['ar_title']);
@@ -9,6 +10,7 @@ $ar_text = $_POST['ar_text'];
 $ar_status = strip_tags($_POST['ar_status']);
 $ar_cat = strip_tags($_POST['ar_cat']);
 $ar_price = strip_tags($_POST['ar_price']);
+$ar_slug = slugify($ar_title);
 // upload files
 $new_file_name1 = "default.jpg";
 // pic 1
@@ -22,8 +24,8 @@ if ($_FILES["ar_image"]["name"] != '') {
     // Check if image file is a actual image or fake image
 
     // Allow certain file formats
-    if ($imageFileType == "jpg" || $imageFileType || "png" || $imageFileType || "jpeg"
-        && $imageFileType || "gif") {
+    $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+    if (in_array($imageFileType, $allowed_types)) {
 
         if (move_uploaded_file($_FILES["ar_image"]["tmp_name"], $target_file)) {
             $file_full_path = $target_dir . $filename;
@@ -46,11 +48,15 @@ if ($_FILES["ar_image"]["name"] != '') {
 
 
 $sql = "INSERT INTO $tableName
-    ( `ar_type`, `ar_price` ,  `ar_title`, `ar_cat` ,  `ar_text`, `ar_image` ,`ar_status`)
+    ( `ar_type`, `ar_price` ,  `ar_title`, `ar_slug`, `ar_cat` ,  `ar_text`, `ar_image` ,`ar_status`)
     VALUES
-    ( 3 , '$ar_price', '$ar_title', '$ar_cat', '$ar_text','$new_file_name1',  '$ar_status');";
+    (?, ?, ?, ?, ?, ?, ?, ?)";
 
-if ($conn->query($sql)) {
+$stmt = $conn->prepare($sql);
+$ar_type = 3; // Service for individuals
+$stmt->bind_param("isssissi", $ar_type, $ar_price, $ar_title, $ar_slug, $ar_cat, $ar_text, $new_file_name1, $ar_status);
+
+if ($stmt->execute()) {
     header("location:../individual.php?s=1");
 } else {
     header("location:../individual-add.php?e=1");

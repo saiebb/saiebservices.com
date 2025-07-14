@@ -63,3 +63,15 @@ function getAssetsUrl() {
 define('BASE_URL', getBaseUrl());
 define('ASSETS_URL', getAssetsUrl());
 ?>
+
+<?php
+if (!function_exists('truncate_words')) {
+    function truncate_words($text, $word_limit) {
+        $text = strip_tags($text);
+        $words = explode(' ', $text);
+        if (count($words) > $word_limit) {
+            return implode(' ', array_slice($words, 0, $word_limit)) . ' ...';
+        }
+        return $text;
+    }
+}

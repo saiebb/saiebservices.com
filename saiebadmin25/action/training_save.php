@@ -1,6 +1,7 @@
 <?php
 include 'db.php';
 include_once "resize_class.php";
+include_once "../../action/seo_url.php";
 
 $tableName = $prefix . "articles";
 $ar_title = strip_tags($_POST['ar_title']);
@@ -8,6 +9,7 @@ $ar_title = strip_tags($_POST['ar_title']);
 $ar_price = strip_tags($_POST['ar_price']);
 $ar_text = $_POST['ar_text'];
 $ar_status = strip_tags($_POST['ar_status']);
+$ar_slug = slugify($ar_title);
 // upload files
 $new_file_name1 = "default.jpg";
 // pic 1
@@ -45,12 +47,15 @@ if ($_FILES["ar_image"]["name"] != '') {
 
 
 $sql = "INSERT INTO $tableName
-    ( `ar_type`,  `ar_title`,  `ar_price` ,`ar_text`, `ar_image` ,`ar_status`)
+    ( `ar_type`,  `ar_title`, `ar_slug`, `ar_price` ,`ar_text`, `ar_image` ,`ar_status`)
     VALUES
-    ( 1 , '$ar_title',  '$ar_price' , '$ar_text','$new_file_name1',  '$ar_status');";
+    ( ?, ?, ?, ?, ?, ?, ?)";
 
- 
-if ($conn->query($sql)) {
+$stmt = $conn->prepare($sql);
+$ar_type = 1; // Training
+$stmt->bind_param("isssisi", $ar_type, $ar_title, $ar_slug, $ar_price, $ar_text, $new_file_name1, $ar_status);
+
+if ($stmt->execute()) {
     header("location:../training.php?s=1");
 } else {
     header("location:../training-add.php?e=1");

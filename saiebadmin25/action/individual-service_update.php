@@ -1,6 +1,7 @@
 <?php
 include 'db.php';
 include_once "resize_class.php";
+include_once "../../action/seo_url.php";
 
 $tableName = $prefix . "articles";
 $ar_title = strip_tags($_POST['ar_title']);
@@ -10,6 +11,7 @@ $ar_status = strip_tags($_POST['ar_status']);
 $ar_id = strip_tags($_POST['ar_id']);
 $ar_cat = strip_tags($_POST['ar_cat']);
 $ar_price = strip_tags($_POST['ar_price']);
+$ar_slug = slugify($ar_title);
 
 // pic 1
 if ($_FILES["ar_image"]["name"] != '') {
@@ -22,8 +24,8 @@ if ($_FILES["ar_image"]["name"] != '') {
     // Check if image file is a actual image or fake image
 
     // Allow certain file formats
-    if ($imageFileType == "jpg" || $imageFileType || "png" || $imageFileType || "jpeg"
-        && $imageFileType || "gif") {
+    $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
+    if (in_array($imageFileType, $allowed_types)) {
 
         if (move_uploaded_file($_FILES["ar_image"]["tmp_name"], $target_file)) {
             $file_full_path = $target_dir . $filename;
@@ -41,33 +43,20 @@ if ($_FILES["ar_image"]["name"] != '') {
         $new_file_name1 = "noimage.png";
     }
 
-    $sql = "update $tableName
-set
-ar_title = '$ar_title' ,
-ar_price = '$ar_price',  
-ar_text =  '$ar_text',
-ar_image = '$new_file_name1',
-ar_status =  '$ar_status',
-ar_cat =  '$ar_cat'
-where
-ar_id = " . $ar_id;
+    $sql = "UPDATE $tableName SET ar_title = ?, ar_slug = ?, ar_price = ?, ar_text = ?, ar_image = ?, ar_status = ?, ar_cat = ? WHERE ar_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssiii", $ar_title, $ar_slug, $ar_price, $ar_text, $new_file_name1, $ar_status, $ar_cat, $ar_id);
 
 } else {
 
-    $sql = "update $tableName
-set
-ar_title = '$ar_title' ,
-ar_price = '$ar_price',  
-ar_text =  '$ar_text',
-ar_cat =  '$ar_cat' ,
-ar_status =  '$ar_status'
-where
-ar_id = " . $ar_id;
+    $sql = "UPDATE $tableName SET ar_title = ?, ar_slug = ?, ar_price = ?, ar_text = ?, ar_status = ?, ar_cat = ? WHERE ar_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssiii", $ar_title, $ar_slug, $ar_price, $ar_text, $ar_status, $ar_cat, $ar_id);
 }
 
 // check if email already exist
 
-if ($conn->query($sql)) {
+if ($stmt->execute()) {
   
     ?>
    <script> window.location.href = "../individual.php?s=3"; </script>

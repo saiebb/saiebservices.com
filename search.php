@@ -156,30 +156,13 @@ switch ($rowscIndividual['ar_type']) {
 
 
 
-
-                                                    <?php
-$text = strip_tags($rowscIndividual['ar_title']);
-    $words = explode(' ', $text);
-    $firstTwentyWords = array_slice($words, 0, 6);
-    $shortenedText = implode(' ', $firstTwentyWords);
-    echo $shortenedText;
-    if (count($firstTwentyWords) > 7) {
-        echo " ...";
-    }
-
-    ?>
+                                                    <?php echo truncate_words($rowscIndividual['ar_title'], 6); ?>
                                                 </a>
                                         </h3>
                                     </div>
                                     <div class="entry-content blog3-content">
                                         <p class="mb-0">
-                                            <?php
-$text = strip_tags($rowscIndividual['ar_text']);
-    $words = explode(' ', $text);
-    $firstTwentyWords = array_slice($words, 0, 10);
-    $shortenedText = implode(' ', $firstTwentyWords);
-    echo $shortenedText . " ...";
-    ?>
+                                            <?php echo truncate_words($rowscIndividual['ar_text'], 10); ?>
                                         </p>
                                     </div>
                                 </div>

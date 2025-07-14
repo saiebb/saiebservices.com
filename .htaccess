@@ -22,7 +22,8 @@
 # Cache Control Headers - إعدادات التخزين المؤقت
 <IfModule mod_expires.c>
     ExpiresActive On
-    
+    # -- For live server, set the base to root --
+    RewriteBase /
     # Images
     ExpiresByType image/jpg "access plus 1 month"
     ExpiresByType image/jpeg "access plus 1 month"

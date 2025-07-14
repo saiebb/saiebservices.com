@@ -71,16 +71,10 @@ include "action/news_list.php";
                                 </ul>
                             </div>
                             <div class="">
-                                <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>">
-                                    <p class="individual-list-text"><?php 
-												$text =  strip_tags($rows['ar_text'] ) ;
-												$words = explode(' ', $text);
-												$firstTwentyWords = array_slice($words, 0, 40);
-												$shortenedText = implode(' ', $firstTwentyWords);
-												echo $shortenedText." ...";  
-												?> </p>
+                                <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"], $rows['ar_slug']); ?>">
+                                    <p class="individual-list-text"><?php echo truncate_words($rows['ar_text'], 40); ?> </p>
                                 </a>
-                                <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>" class="more-link"> المزيد</a>
+                                <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"], $rows['ar_slug']); ?>" class="more-link"> المزيد</a>
                             </div>
                         </div>
                     </div>
