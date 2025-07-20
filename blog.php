@@ -51,7 +51,7 @@ include "action/news_list.php";
                     <div class="grid-inner row g-0">
                         <div class="col-md-4">
                             <div class="entry-image">
-                                <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>">
+                                <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"], $rows['ar_slug']); ?>">
                                     <img src="images/<?php echo $rows["ar_image"]; ?>" class="news-list-img"
                                         alt="<?php echo $rows["ar_title"]; ?>" />
                                 </a>
@@ -60,7 +60,7 @@ include "action/news_list.php";
                         <div class="col-md-8 ps-md-4">
                             <div class="entry-title title-sm">
                                 <h2>
-                                    <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>">
+                                    <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"], $rows['ar_slug']); ?>">
                                         <?php echo $rows["ar_title"]; ?>
                                     </a>
                                 </h2>

@@ -77,7 +77,7 @@ while ($rowscIndividual = $resultIndividual->fetch_assoc()) {
 
 <div class="entry col-lg-4 col-md-6">
 							<div class="grid-inner shadow-sm card rounded-5">
-                            <a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title']); ?>">
+                            <a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title'], $rowscIndividual['ar_slug']); ?>">
 									<img src="images/<?php echo $rowscIndividual['ar_image']; ?>" alt="Image" class="card-img-top img-fluid">
 								</a>
 								<div class="p-3">
@@ -90,7 +90,7 @@ while ($rowscIndividual = $resultIndividual->fetch_assoc()) {
 									</div>
                                     <div class="entry-title">
 
-										<h3 class=" blog3-title"><a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title']); ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="<?php echo $rowscIndividual['ar_title']; ?>" >
+										<h3 class=" blog3-title"><a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title'], $rowscIndividual['ar_slug']); ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="<?php echo $rowscIndividual['ar_title']; ?>" >
                                         <?php echo truncate_words($rowscIndividual['ar_title'], 8); ?>
                                     </a></h3>
 									</div>

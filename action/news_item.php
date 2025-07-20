@@ -6,7 +6,7 @@ $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 
 if ($id === false) {
     // Handle invalid ID, maybe redirect or show an error
-    header("Location: /404.php");
+    header("Location: " . BASE_URL . "/404.php");
     exit();
 }
 

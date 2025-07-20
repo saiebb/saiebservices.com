@@ -6,6 +6,12 @@
 
 // تحديد المسار الأساسي للموقع
 function getBaseUrl() {
+    // التحقق من وجود متغيرات الخادم (للتشغيل من المتصفح)
+    if (!isset($_SERVER['HTTP_HOST']) || !isset($_SERVER['SCRIPT_NAME'])) {
+        // إذا كان التشغيل من سطر الأوامر، استخدم القيم الافتراضية للتطوير المحلي
+        return 'http://localhost/saieb';
+    }
+    
     // الحصول على بروتوكول الموقع (http أو https)
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
     

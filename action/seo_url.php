@@ -93,15 +93,17 @@ function slugify($text) {
     // تحويل النص إلى أحرف صغيرة للمعالجة
     $text_lower = mb_strtolower($text, 'UTF-8');
     
-    // حذف كلمات التوقف العربية
-    foreach ($arabic_stop_words as $word) {
-        $text_lower = preg_replace('/\b' . preg_quote($word, '/') . '\b/u', '', $text_lower);
-    }
+    // حذف كلمات التوقف العربية (مع تحسين الأداء)
+    $arabic_pattern = '/\b(' . implode('|', array_map(function($word) {
+        return preg_quote($word, '/');
+    }, $arabic_stop_words)) . ')\b/u';
+    $text_lower = preg_replace($arabic_pattern, '', $text_lower);
     
-    // حذف كلمات التوقف الإنجليزية
-    foreach ($english_stop_words as $word) {
-        $text_lower = preg_replace('/\b' . preg_quote($word, '/') . '\b/i', '', $text_lower);
-    }
+    // حذف كلمات التوقف الإنجليزية (مع تحسين الأداء)
+    $english_pattern = '/\b(' . implode('|', array_map(function($word) {
+        return preg_quote($word, '/');
+    }, $english_stop_words)) . ')\b/i';
+    $text_lower = preg_replace($english_pattern, '', $text_lower);
     
     // تنظيف المسافات المتعددة
     $text = preg_replace('/\s+/', ' ', trim($text_lower));
@@ -160,40 +162,51 @@ function slugify($text) {
  */
 function getBlogUrl($id, $title = '', $slug = '') {
     $relativePath = '';
+    $finalSlug = '';
     
-    // إذا تم تمرير slug، استخدمه مباشرة
-    if (!empty($slug)) {
-        $relativePath = "/blog/{$slug}-{$id}";
+    // إذا تم تمرير slug وليس فارغاً، استخدمه مباشرة
+    if (!empty($slug) && trim($slug) !== '') {
+        $finalSlug = $slug;
     } else {
         // إذا لم يتم تمرير slug، جلبه من قاعدة البيانات
         global $conn;
         if ($conn) {
-            $stmt = $conn->prepare("SELECT ar_slug FROM sa_articles WHERE ar_id = ? LIMIT 1");
+            $stmt = $conn->prepare("SELECT ar_slug, ar_title FROM sa_articles WHERE ar_id = ? LIMIT 1");
             $stmt->bind_param('i', $id);
             $stmt->execute();
             $result = $stmt->get_result();
             
             if ($row = $result->fetch_assoc()) {
-                if (!empty($row['ar_slug'])) {
-                    $relativePath = "/blog/{$row['ar_slug']}-{$id}";
+                // استخدم الـ slug من قاعدة البيانات إذا كان موجوداً وليس فارغاً
+                if (!empty($row['ar_slug']) && trim($row['ar_slug']) !== '') {
+                    $finalSlug = $row['ar_slug'];
+                } else {
+                    // إذا لم يوجد slug، استخدم العنوان من قاعدة البيانات
+                    $title = !empty($title) ? $title : $row['ar_title'];
                 }
             }
         }
         
-        // إذا لم يوجد slug في قاعدة البيانات، أنشئه من العنوان (للتوافق مع الكود القديم)
-        if (empty($relativePath) && !empty($title)) {
-            $generated_slug = slugify($title);
-            if (empty($generated_slug)) {
-                $generated_slug = "article";
+        // إذا لم نحصل على slug بعد، أنشئه من العنوان
+        if (empty($finalSlug)) {
+            if (!empty($title)) {
+                $generated_slug = slugify($title);
+                $finalSlug = !empty($generated_slug) ? $generated_slug : "article";
+                
+                // حفظ الـ slug المولد في قاعدة البيانات للاستخدام المستقبلي
+                if ($conn && !empty($generated_slug)) {
+                    $updateStmt = $conn->prepare("UPDATE sa_articles SET ar_slug = ? WHERE ar_id = ? AND (ar_slug IS NULL OR ar_slug = '')");
+                    $updateStmt->bind_param('si', $generated_slug, $id);
+                    $updateStmt->execute();
+                }
+            } else {
+                $finalSlug = "article";
             }
-            $relativePath = "/blog/{$generated_slug}-{$id}";
-        }
-        
-        // قيمة افتراضية
-        if (empty($relativePath)) {
-            $relativePath = "/blog/article-{$id}";
         }
     }
+    
+    // إنشاء المسار النسبي
+    $relativePath = "/blog/{$finalSlug}-{$id}";
     
     // إذا كان BASE_URL معرف، استخدمه لإنشاء الرابط الكامل
     if (defined('BASE_URL')) {

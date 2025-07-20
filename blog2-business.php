@@ -1,6 +1,7 @@
 <?php
 include "action/news_list.php";
 include "action/news_list_buiness.php";
+include "action/seo_url.php";
 ?>
 
 <!-- Posts
@@ -15,7 +16,7 @@ include "action/news_list_buiness.php";
         <div class="grid-inner row g-0">
             <div class="col-md-4">
                 <div class="entry-image">
-                    <a href="blog-single.php?id=<?php echo $rows["ar_id"]; ?>">
+                    <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>">
                         <img src="images/<?php echo $rows["ar_image"]; ?>" class="news-list-img"
                             alt="Standard Post with Image" />
                     </a>
@@ -24,7 +25,7 @@ include "action/news_list_buiness.php";
             <div class="col-md-8 ps-md-4">
                 <div class="entry-title title-sm">
                     <h2>
-                        <a href="blog-single.php?id=<?php echo $rows["ar_id"]; ?>">
+                        <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>">
                             <?php echo $rows["ar_title"]; ?>
 
                         </a>
@@ -36,7 +37,7 @@ include "action/news_list_buiness.php";
                     </ul>
                 </div>
                 <div class="">
-                    <a href="blog-single.php?id=<?php echo $rows["ar_id"]; ?>">
+                    <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>">
                         <p class="individual-list-text"><?php
     $text = strip_tags($rows['ar_text']);
     $words = explode(' ', $text);
@@ -45,7 +46,7 @@ include "action/news_list_buiness.php";
     echo $shortenedText . " ...";
     ?> </p>
                     </a>
-                    <a href="blog-single.php?id=<?php echo $rows["ar_id"]; ?>" class="more-link"> المزيد</a>
+                    <a href="<?php echo getBlogUrl($rows["ar_id"], $rows["ar_title"]); ?>" class="more-link"> المزيد</a>
                 </div>
             </div>
         </div>

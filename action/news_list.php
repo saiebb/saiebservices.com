@@ -11,7 +11,7 @@ $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $articlesPerPage;
 
 // تعديل استعلام SQL لإضافة حدود الصفحات
-$sql = "SELECT * FROM $tableName WHERE ar_type = 4   AND ar_status <> 3  ORDER BY ar_id DESC LIMIT $offset, $articlesPerPage";
+$sql = "SELECT *, ar_slug FROM $tableName WHERE ar_type = 4   AND ar_status <> 3  ORDER BY ar_id DESC LIMIT $offset, $articlesPerPage";
 
 $reult = $conn->query($sql);
 

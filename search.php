@@ -80,7 +80,7 @@ while ($rowscIndividual = $resultIndividual->fetch_assoc()) {
 
     if ($rowscIndividual['ar_type'] == 4) {
         ?>
-                                <a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title']); ?>">
+                                <a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title'], $rowscIndividual['ar_slug']); ?>">
                                     <img src="images/<?php echo $rowscIndividual['ar_image']; ?>" alt="Image"
                                         class="card-img-top img-fluid">
                                 </a>
@@ -141,7 +141,7 @@ switch ($rowscIndividual['ar_type']) {
 
     if ($rowscIndividual['ar_type'] == 4) {
         ?>
-                                            <a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title']); ?>"
+                                            <a href="<?php echo getBlogUrl($rowscIndividual['ar_id'], $rowscIndividual['ar_title'], $rowscIndividual['ar_slug']); ?>"
                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="<?php echo $rowscIndividual['ar_title']; ?>">
                                                 <?php

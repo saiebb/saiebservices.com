@@ -9,7 +9,7 @@ $startFrom = ($currentPage - 1) * $resultsPerPage; // بداية النتائج 
 $tableName = $prefix . "articles";
 
 // استعلام SQL مع التصفح
-$sqlBusiness = "SELECT * FROM $tableName WHERE ar_type = 2 AND ar_status = 1 ORDER BY ar_id DESC LIMIT $startFrom, $resultsPerPage";
+$sqlBusiness = "SELECT *, ar_slug FROM $tableName WHERE ar_type = 2 AND ar_status = 1 ORDER BY ar_id DESC LIMIT $startFrom, $resultsPerPage";
 
 $reultBusiness = $conn->query($sqlBusiness);
 

@@ -25,11 +25,36 @@
                 <h2> صـــيب لخدمات الاعمال</h2>
             </div>
             <div class="card-body">
-
+                <?php
+                // عرض رسائل الخطأ
+                if (isset($_GET['error'])) {
+                    $error = $_GET['error'];
+                    $errorMessage = '';
+                    
+                    switch ($error) {
+                        case 'missing_data':
+                            $errorMessage = 'يرجى إدخال جميع البيانات المطلوبة';
+                            break;
+                        case 'empty_fields':
+                            $errorMessage = 'يرجى ملء جميع الحقول';
+                            break;
+                        case 'invalid_credentials':
+                            $errorMessage = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+                            break;
+                        default:
+                            $errorMessage = 'حدث خطأ في تسجيل الدخول';
+                    }
+                    
+                    echo '<div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <i class="icon fas fa-ban"></i> ' . $errorMessage . '
+                          </div>';
+                }
+                ?>
 
                 <form action="action/login.php" method="post" id="form">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="adname" placeholder="اســم المســـتخدم">
+                        <input type="text" class="form-control" name="adname" placeholder="اســم المســـتخدم" required autocomplete="username">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -37,7 +62,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" class="form-control" name="adpass" placeholder="كلمة المرور">
+                        <input type="password" class="form-control" name="adpass" placeholder="كلمة المرور" required autocomplete="current-password">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>

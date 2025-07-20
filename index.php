@@ -253,7 +253,7 @@ while ($rowsLatestNews = $reultLatestNews->fetch_assoc()) {
                 <div class="col-lg-3 col-md-6">
                     <div class="entry">
                         <div class="entry-image">
-                            <a href="<?php echo getBlogUrl($rowsLatestNews["ar_id"], $rowsLatestNews["ar_title"]); ?>"><img
+                            <a href="<?php echo getBlogUrl($rowsLatestNews["ar_id"], $rowsLatestNews["ar_title"], $rowsLatestNews["ar_slug"]); ?>"><img
                                     src="images/<?php echo $rowsLatestNews["ar_image"]; ?>" alt="<?php echo $rowsLatestNews["ar_title"]; ?>"
                                     class="rounded news-home-img img-fluid" /></a>
                         </div>
@@ -265,7 +265,7 @@ while ($rowsLatestNews = $reultLatestNews->fetch_assoc()) {
                         </div>
                         <div class="entry-title title-xs text-transform-none px-2">
                             <h3 class="training-list-title">
-                                <a href="<?php echo getBlogUrl($rowsLatestNews["ar_id"], $rowsLatestNews["ar_title"]); ?>">
+                                <a href="<?php echo getBlogUrl($rowsLatestNews["ar_id"], $rowsLatestNews["ar_title"], $rowsLatestNews["ar_slug"]); ?>">
                                     <?php echo $rowsLatestNews["ar_title"]; ?>
                                 </a>
                             </h3>

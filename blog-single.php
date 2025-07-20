@@ -1,5 +1,6 @@
 <?php
 include 'action/news_item.php';
+include 'action/seo_url.php';
 
 // إضافة وسوم meta للـ SEO
 $pageTitle = $rows['ar_title'] . " | صيب لخدمات الاعمال";
