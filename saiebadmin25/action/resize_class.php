@@ -26,8 +26,28 @@ class resize
 
     public function __construct($fileName)
     {
+        // التحقق من وجود GD Library
+        if (!extension_loaded('gd')) {
+            throw new Exception('GD Library غير مفعلة. يرجى تفعيل GD extension في PHP.');
+        }
+        
+        // التحقق من وجود الملف
+        if (!file_exists($fileName)) {
+            throw new Exception("الملف غير موجود: $fileName");
+        }
+        
+        // التحقق من إمكانية قراءة الملف
+        if (!is_readable($fileName)) {
+            throw new Exception("لا يمكن قراءة الملف: $fileName");
+        }
+        
         // *** Open up the file
         $this->image = $this->openImage($fileName);
+        
+        // التحقق من نجاح فتح الصورة
+        if ($this->image === false) {
+            throw new Exception("فشل في فتح الصورة: $fileName. تأكد من أن الملف صورة صحيحة.");
+        }
 
         // *** Get width and height
         $this->width = imagesx($this->image);
@@ -44,17 +64,34 @@ class resize
         switch ($extension) {
             case '.jpg':
             case '.jpeg':
+                if (!function_exists('imagecreatefromjpeg')) {
+                    throw new Exception('دالة imagecreatefromjpeg غير متاحة. تأكد من تفعيل JPEG support في GD.');
+                }
                 $img = @imagecreatefromjpeg($file);
+                if ($img === false) {
+                    throw new Exception("فشل في قراءة ملف JPEG: $file");
+                }
                 break;
             case '.gif':
+                if (!function_exists('imagecreatefromgif')) {
+                    throw new Exception('دالة imagecreatefromgif غير متاحة. تأكد من تفعيل GIF support في GD.');
+                }
                 $img = @imagecreatefromgif($file);
+                if ($img === false) {
+                    throw new Exception("فشل في قراءة ملف GIF: $file");
+                }
                 break;
             case '.png':
+                if (!function_exists('imagecreatefrompng')) {
+                    throw new Exception('دالة imagecreatefrompng غير متاحة. تأكد من تفعيل PNG support في GD.');
+                }
                 $img = @imagecreatefrompng($file);
+                if ($img === false) {
+                    throw new Exception("فشل في قراءة ملف PNG: $file");
+                }
                 break;
             default:
-                $img = false;
-                break;
+                throw new Exception("نوع الملف غير مدعوم: $extension. الأنواع المدعومة: jpg, jpeg, png, gif");
         }
         return $img;
     }
@@ -198,21 +235,41 @@ class resize
 
     public function saveImage($savePath, $imageQuality = "100")
     {
+        // التحقق من وجود الصورة المعدلة
+        if (!$this->imageResized) {
+            throw new Exception("لا توجد صورة معدلة للحفظ. يرجى استدعاء resizeImage() أولاً.");
+        }
+        
+        // التحقق من إمكانية الكتابة في المجلد
+        $directory = dirname($savePath);
+        if (!is_dir($directory)) {
+            throw new Exception("المجلد غير موجود: $directory");
+        }
+        if (!is_writable($directory)) {
+            throw new Exception("لا يمكن الكتابة في المجلد: $directory");
+        }
+        
         // *** Get extension
         $extension = strrchr($savePath, '.');
         $extension = strtolower($extension);
+        
+        $success = false;
 
         switch ($extension) {
             case '.jpg':
             case '.jpeg':
                 if (imagetypes() & IMG_JPG) {
-                    imagejpeg($this->imageResized, $savePath, $imageQuality);
+                    $success = imagejpeg($this->imageResized, $savePath, $imageQuality);
+                } else {
+                    throw new Exception("JPEG support غير متاح في GD Library");
                 }
                 break;
 
             case '.gif':
                 if (imagetypes() & IMG_GIF) {
-                    imagegif($this->imageResized, $savePath);
+                    $success = imagegif($this->imageResized, $savePath);
+                } else {
+                    throw new Exception("GIF support غير متاح في GD Library");
                 }
                 break;
 
@@ -224,18 +281,22 @@ class resize
                 $invertScaleQuality = 9 - $scaleQuality;
 
                 if (imagetypes() & IMG_PNG) {
-                    imagepng($this->imageResized, $savePath, $invertScaleQuality);
+                    $success = imagepng($this->imageResized, $savePath, $invertScaleQuality);
+                } else {
+                    throw new Exception("PNG support غير متاح في GD Library");
                 }
                 break;
 
-            // ... etc
-
             default:
-                // *** No extension - No save.
-                break;
+                throw new Exception("نوع الملف غير مدعوم للحفظ: $extension");
+        }
+        
+        if (!$success) {
+            throw new Exception("فشل في حفظ الصورة: $savePath");
         }
 
         imagedestroy($this->imageResized);
+        return true;
     }
 
     ## --------------------------------------------------------

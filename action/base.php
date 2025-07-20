@@ -46,7 +46,7 @@ function getBaseUrl() {
         if ($scriptDir !== '/' && $scriptDir !== '\\') {
             // تنظيف المسار من الشرطات المائلة المتكررة
             $scriptDir = str_replace('\\', '/', $scriptDir);
-            $baseUrl .= $scriptDir;
+            $baseUrl .= '/saieb';  // استخدم المجلد الفرعي في البيئة المحلية فقط
         }
     } else {
         // في بيئة الإنتاج فقط، استخدم المجال الرئيسي

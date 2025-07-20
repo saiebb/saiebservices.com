@@ -152,6 +152,56 @@ function slugify($text) {
 }
 
 /**
+ * إنشاء slug فريد للمقال
+ * Generate unique slug for article
+ * 
+ * @param string $title عنوان المقال
+ * @param mysqli $conn اتصال قاعدة البيانات
+ * @param int $exclude_id معرف المقال المستبعد (للتحديث)
+ * @return string الـ slug الفريد
+ */
+function generateUniqueSlug($title, $conn, $exclude_id = 0) {
+    $base_slug = slugify($title);
+    $slug = $base_slug;
+    $counter = 1;
+    
+    // التحقق من تفرد الـ slug
+    while (true) {
+        $sql = "SELECT ar_id FROM sa_articles WHERE ar_slug = ?";
+        if ($exclude_id > 0) {
+            $sql .= " AND ar_id != ?";
+        }
+        
+        $stmt = $conn->prepare($sql);
+        if ($exclude_id > 0) {
+            $stmt->bind_param('si', $slug, $exclude_id);
+        } else {
+            $stmt->bind_param('s', $slug);
+        }
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        // إذا لم يوجد slug مطابق، فهو فريد
+        if ($result->num_rows == 0) {
+            break;
+        }
+        
+        // إضافة رقم للـ slug
+        $slug = $base_slug . '-' . $counter;
+        $counter++;
+        
+        // حماية من اللوب اللانهائي
+        if ($counter > 1000) {
+            $slug = $base_slug . '-' . time();
+            break;
+        }
+    }
+    
+    return $slug;
+}
+
+/**
  * إنشاء رابط لمقال في المدونة
  * Generate URL for a blog article
  * 
