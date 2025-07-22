@@ -211,6 +211,27 @@ function generateUniqueSlug($title, $conn, $exclude_id = 0) {
  * @return string الرابط النهائي
  */
 function getBlogUrl($id, $title = '', $slug = '') {
+    // التحقق من البيئة المحلية
+    $isLocal = (
+        (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] === 'localhost') ||
+        (isset($_SERVER['SERVER_NAME']) && strpos($_SERVER['SERVER_NAME'], 'localhost:') === 0) ||
+        (isset($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR'] === '127.0.0.1') ||
+        (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'localhost') !== false)
+    );
+    
+    // في البيئة المحلية، استخدم الروابط المباشرة
+    if ($isLocal) {
+        $relativePath = "/blog-single.php?id={$id}";
+        
+        // إذا كان BASE_URL معرف، استخدمه لإنشاء الرابط الكامل
+        if (defined('BASE_URL')) {
+            return BASE_URL . $relativePath;
+        }
+        
+        return $relativePath;
+    }
+    
+    // في البيئة المباشرة، استخدم روابط SEO
     $relativePath = '';
     $finalSlug = '';
     
@@ -276,6 +297,30 @@ function getBlogUrl($id, $title = '', $slug = '') {
  * @return string الرابط النهائي
  */
 function getServiceUrl($id, $title, $type) {
+    // التحقق من البيئة المحلية
+    $isLocal = (
+        (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] === 'localhost') ||
+        (isset($_SERVER['SERVER_NAME']) && strpos($_SERVER['SERVER_NAME'], 'localhost:') === 0) ||
+        (isset($_SERVER['SERVER_ADDR']) && $_SERVER['SERVER_ADDR'] === '127.0.0.1') ||
+        (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'localhost') !== false)
+    );
+    
+    // في البيئة المحلية، استخدم الروابط المباشرة
+    if ($isLocal) {
+        $relativePath = "/service-detail.php?id={$id}";
+        if ($type) {
+            $relativePath .= "&type={$type}";
+        }
+        
+        // إذا كان BASE_URL معرف، استخدمه لإنشاء الرابط الكامل
+        if (defined('BASE_URL')) {
+            return BASE_URL . $relativePath;
+        }
+        
+        return $relativePath;
+    }
+    
+    // في البيئة المباشرة، استخدم روابط SEO
     $slug = slugify($title);
     
     // إذا كان العنوان فارغًا، استخدم قيمة افتراضية حسب نوع الخدمة

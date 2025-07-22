@@ -33,14 +33,20 @@ $stmt->bind_param($types, ...$params);
 $stmt->execute();
 $resultIndividual = $stmt->get_result();
 
-// Assuming you have already executed the query and have the total number of results
+// Get total number of results for pagination
+$params2 = [];
+$types2 = 'i'; // ar_type is always integer 3
 $sql22 = "SELECT COUNT(*) as total FROM $tableName WHERE ar_type = ? AND ar_status = 1";
+$params2[] = 3;
+
 if (isset($_GET['cat']) && is_numeric($_GET['cat'])) {
     $sql22 .= " AND ar_cat = ?";
+    $params2[] = (int)$_GET['cat'];
+    $types2 .= 'i';
 }
 
 $stmt2 = $conn->prepare($sql22);
-$stmt2->bind_param($types, ...$params);
+$stmt2->bind_param($types2, ...$params2);
 $stmt2->execute();
 $totalResults = $stmt2->get_result()->fetch_assoc()['total'];
 $totalPages = ceil($totalResults / $resultsPerPage);

@@ -1,5 +1,7 @@
 <?php
 include 'db.php';
+include 'send_email_notification.php';
+include 'email_fallback.php';
 
 
 $tableName = $prefix . "requests";
@@ -32,8 +34,54 @@ if ($columnExists) {
 
  
 if ($conn->query($sql)) {
+    // إرسال إشعار بالإيميل عند نجاح حفظ الطلب
+    try {
+        // الحصول على بيانات الخدمة
+        $serviceData = getServiceData($conn, $prefix, $req_ser_id);
+        
+        if ($serviceData) {
+            // إعداد بيانات العميل
+            $clientData = [
+                'name' => $req_cli_name,
+                'email' => $req_cli_email,
+                'phone' => $req_cli_phone,
+                'preferred_time' => $req_cli_time_to_call,
+                'google_consent' => $google_reviews_consent
+            ];
+            
+            // إرسال الإشعار
+            $emailSent = sendServiceRequestNotification($serviceData, $clientData);
+            
+            // في حالة فشل الإرسال، استخدم النظام الاحتياطي
+            if (!$emailSent) {
+                // محاولة إرسال إيميل بسيط
+                $fallbackSent = sendSimpleEmailNotification(
+                    $serviceData['title'], 
+                    $req_cli_name, 
+                    $req_cli_email, 
+                    $req_cli_phone
+                );
+                
+                // حفظ الإشعار في ملف نصي كنظام احتياطي
+                saveNotificationToFile($serviceData, $clientData);
+                
+                $emailSent = $fallbackSent; // تحديث حالة الإرسال
+            }
+            
+            // تسجيل نتيجة الإرسال
+            $logMessage = date('Y-m-d H:i:s') . " - Service request saved successfully. Email notification: " . 
+                         ($emailSent ? "SENT" : "FAILED") . 
+                         " - Service ID: $req_ser_id - Client: $req_cli_name\n";
+            file_put_contents('service_requests.log', $logMessage, FILE_APPEND | LOCK_EX);
+        }
+    } catch (Exception $e) {
+        // تسجيل الخطأ في حالة فشل إرسال الإيميل
+        $errorMessage = date('Y-m-d H:i:s') . " - Email notification error: " . $e->getMessage() . 
+                       " - Service ID: $req_ser_id - Client: $req_cli_name\n";
+        file_put_contents('email_errors.log', $errorMessage, FILE_APPEND | LOCK_EX);
+    }
+    
     echo '1';
 } else {
     echo '2';
-
 }

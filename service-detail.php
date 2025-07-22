@@ -192,6 +192,7 @@ if($rows['ar_type'] == 4 || $rows['ar_type'] == 6 ){
     </div>
 </section><!-- #content end -->
 <script src="saiebadmin25/plugins/jquery/jquery.min.js"></script>
+<script src="js/service-request-enhancement.js"></script>
 <?php
 include 'footer.php';
 ?>

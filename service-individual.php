@@ -342,21 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // إضافة تأثير حركي عند النقر على عناصر القائمة
-    const sidebarItems = document.querySelectorAll('.sidebar-categories .list-group-item');
-    
-    sidebarItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            // إزالة الكلاس النشط من جميع العناصر
-            sidebarItems.forEach(i => i.classList.remove('active-sidebar'));
-            // إضافة الكلاس النشط للعنصر المحدد
-            this.classList.add('active-sidebar');
-        });
-    });
-});
-</script>
+
 
 <style>
 /* تعديلات إضافية لتقليل المسافات في بطاقات الخدمات */

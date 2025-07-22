@@ -16,37 +16,92 @@ include_once 'action/seo_url.php';
     <!-- Base URL for JavaScript -->
     <script src="<?php echo ASSETS_URL; ?>/js/base-url.js"></script>
     
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NK4L62NP');</script>
+    <!-- Google Tag Manager مع معالجة محسنة للأخطاء -->
+    <script>
+        (function(w,d,s,l,i){
+            try {
+                // التحقق من الاتصال بالإنترنت
+                if (!navigator.onLine) {
+                    return;
+                }
+                
+                w[l]=w[l]||[];
+                w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+                
+                var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+                j.async=true;
+                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+                
+                // معالجة أخطاء التحميل
+                j.onerror = function() {
+                    // تجاهل الأخطاء بصمت
+                };
+                
+                f.parentNode.insertBefore(j,f);
+            } catch (error) {
+                // تجاهل أخطاء GTM بصمت
+            }
+        })(window,document,'script','dataLayer','GTM-NK4L62NP');
+    </script>
     <!-- End Google Tag Manager -->
 
-    <!-- Google tag (gtag.js) مع معالجة أفضل للأخطاء -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PELEW7CW99" 
-            onerror="console.warn('فشل في تحميل Google Analytics')"></script>
+    <!-- Google tag (gtag.js) مع معالجة محسنة للأخطاء -->
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){
-            try {
-                dataLayer.push(arguments);
-            } catch (error) {
-                console.warn('خطأ في Google Analytics:', error);
+        // تحميل Google Analytics مع معالجة أفضل للأخطاء
+        (function() {
+            // التحقق من الاتصال بالإنترنت
+            if (!navigator.onLine) {
+                console.warn('لا يوجد اتصال بالإنترنت - تم تخطي Google Analytics');
+                return;
             }
-        }
-        gtag('js', new Date());
-        
-        // تكوين Google Analytics مع معالجة الأخطاء
-        try {
-            gtag('config', 'G-PELEW7CW99', {
-                'transport_type': 'beacon',
-                'anonymize_ip': true
-            });
-        } catch (error) {
-            console.warn('خطأ في تكوين Google Analytics:', error);
-        }
+            
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){
+                try {
+                    if (window.dataLayer) {
+                        dataLayer.push(arguments);
+                    }
+                } catch (error) {
+                    // تجاهل الأخطاء بصمت لتجنب إزعاج المستخدم
+                }
+            }
+            
+            // تحميل سكريبت Google Analytics مع timeout
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PELEW7CW99';
+            
+            var loadTimeout = setTimeout(function() {
+                console.warn('انتهت مهلة تحميل Google Analytics');
+            }, 10000);
+            
+            script.onload = function() {
+                clearTimeout(loadTimeout);
+                try {
+                    gtag('js', new Date());
+                    gtag('config', 'G-PELEW7CW99', {
+                        'transport_type': 'beacon',
+                        'anonymize_ip': true,
+                        'send_page_view': true,
+                        'custom_map': {},
+                        'allow_google_signals': false
+                    });
+                } catch (error) {
+                    // تجاهل أخطاء التكوين
+                }
+            };
+            
+            script.onerror = function() {
+                clearTimeout(loadTimeout);
+                // تجاهل أخطاء التحميل بصمت
+            };
+            
+            document.head.appendChild(script);
+            
+            // جعل gtag متاحة عالمياً
+            window.gtag = gtag;
+        })();
     </script>
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />

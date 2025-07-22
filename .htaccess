@@ -1,244 +1,47 @@
-# Security Headers - إعدادات الأمان
-<IfModule mod_headers.c>
-    # X-Content-Type-Options header لمنع MIME type sniffing
-    Header always set X-Content-Type-Options "nosniff"
-    
-    # X-Frame-Options لمنع clickjacking
-    Header always set X-Frame-Options "SAMEORIGIN"
-    
-    # X-XSS-Protection لحماية من XSS attacks
-    Header always set X-XSS-Protection "1; mode=block"
-    
-    # Referrer Policy
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    
-    # Content Security Policy (CSP) - محسن للخدمات الخارجية مع حل مشاكل الأذونات
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com https://www.gstatic.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://apis.google.com https://www.googleapis.com https://www.google.com; frame-src https://www.google.com https://apis.google.com https://www.gstatic.com; child-src https://www.google.com https://apis.google.com; object-src 'none';"
-    
-    # Permissions Policy - إعدادات الأذونات (تم إزالة unload لحل مشاكل المتصفح)
-    Header always set Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
-</IfModule>
-
-# Cache Control Headers - إعدادات التخزين المؤقت
-<IfModule mod_expires.c>
-    ExpiresActive On
-    # Images
-    ExpiresByType image/jpg "access plus 1 month"
-    ExpiresByType image/jpeg "access plus 1 month"
-    ExpiresByType image/gif "access plus 1 month"
-    ExpiresByType image/png "access plus 1 month"
-    ExpiresByType image/webp "access plus 1 month"
-    ExpiresByType image/svg+xml "access plus 1 month"
-    
-    # CSS and JavaScript
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
-    ExpiresByType text/javascript "access plus 1 month"
-    
-    # Fonts
-    ExpiresByType font/woff "access plus 1 year"
-    ExpiresByType font/woff2 "access plus 1 year"
-    ExpiresByType application/font-woff "access plus 1 year"
-    ExpiresByType application/font-woff2 "access plus 1 year"
-    
-    # HTML
-    ExpiresByType text/html "access plus 1 hour"
-</IfModule>
-
-# Alternative Cache Control using mod_headers
-<IfModule mod_headers.c>
-    # Cache static assets for 1 month
-    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf|eot)$">
-        Header set Cache-Control "public, max-age=2592000"
-    </FilesMatch>
-    
-    # Cache HTML for 1 hour
-    <FilesMatch "\.(html|htm|php)$">
-        Header set Cache-Control "public, max-age=3600"
-    </FilesMatch>
-</IfModule>
-
-# Compression - ضغط الملفات
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/plain
-    AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/xml
-    AddOutputFilterByType DEFLATE text/css
-    AddOutputFilterByType DEFLATE application/xml
-    AddOutputFilterByType DEFLATE application/xhtml+xml
-    AddOutputFilterByType DEFLATE application/rss+xml
-    AddOutputFilterByType DEFLATE application/javascript
-    AddOutputFilterByType DEFLATE application/x-javascript
-    AddOutputFilterByType DEFLATE text/javascript
-</IfModule>
-
-# Browser Caching - تخزين مؤقت للمتصفح
-<IfModule mod_headers.c>
-    # Remove ETags
-    Header unset ETag
-    FileETag None
-    
-    # Set Vary header
-    Header append Vary Accept-Encoding
-</IfModule>
-
-# Set default index file
+# إعدادات مبسطة للتشغيل المحلي
 DirectoryIndex index.php
 
-# Performance Optimizations - تحسينات الأداء
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
     
-    # استثناء مجلد الإدارة من قواعد إعادة الكتابة
-    # Exclude admin directory from URL rewriting
+    # استثناء مجلد الإدارة
     RewriteRule ^saiebadmin25/ - [L]
     
-    # Remove trailing slash from non-directory URLs
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{THE_REQUEST} \s(.+?)/+[?\s] [NC]
-    RewriteRule ^(.+?)/+$ $1 [R=301,L]
-    
-    # 1. روابط SEO للمقالات والخدمات - SEO Friendly URLs for articles and services
-    
-    # المقالات - Blog articles (محدثة لدعم الأحرف العربية والإنجليزية)
-    # مثال: /blog/article-title-123 -> blog-single.php?id=123
-    # مثال: /blog/dwra-tqyym-alada-alwzyfy-97 -> blog-single.php?id=97
-    RewriteRule ^blog/([a-zA-Z0-9_\-]+)-([0-9]+)/?$ blog-single.php?id=$2 [L,QSA]
-    
-    # خدمات الأعمال - Business services
-    # مثال: /business-services/service-title-123 -> service-detail.php?id=123&type=2
-    RewriteRule ^business-services/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2&type=2 [L,QSA]
-    
-    # خدمات الأفراد - Individual services
-    # مثال: /individual-services/service-title-123 -> service-detail.php?id=123&type=3
+    # روابط الخدمات المبسطة للتشغيل المحلي
+    # خدمات الأفراد
     RewriteRule ^individual-services/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2&type=3 [L,QSA]
     
-    # الخدمات المالية - Financial services
-    # مثال: /financial-services/service-title-123 -> service-detail.php?id=123&type=4
+    # خدمات الأعمال
+    RewriteRule ^business-services/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2&type=2 [L,QSA]
+    
+    # الخدمات المالية
     RewriteRule ^financial-services/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2&type=4 [L,QSA]
     
-    # التدريب - Training programs
-    # مثال: /training-programs/program-title-123 -> service-detail.php?id=123&type=1
+    # التدريب
     RewriteRule ^training-programs/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2&type=1 [L,QSA]
     
-    # المكتبة - Library items
-    # مثال: /library/document-title-123 -> library-detail.php?id=123
-    RewriteRule ^library/([a-zA-Z0-9_-]+)-([0-9]+)/?$ library-detail.php?id=$2 [L,QSA]
-    
-    # الخدمات العامة - Generic services
-    # مثال: /service/item-123 -> service-detail.php?id=123
+    # الخدمات العامة
     RewriteRule ^service/([a-zA-Z0-9_-]+)-([0-9]+)/?$ service-detail.php?id=$2 [L,QSA]
     
-    # 2. أسماء معبرة للصفحات الثابتة - SEO Friendly URLs for static pages
-    # الصفحة الرئيسية - Homepage
-    RewriteRule ^home/?$ index.php [L]
+    # المقالات
+    RewriteRule ^blog/([a-zA-Z0-9_-]+)-([0-9]+)/?$ blog-single.php?id=$2 [L,QSA]
     
-    # صفحة من نحن - About page
+    # الصفحات الثابتة
     RewriteRule ^about-us/?$ about.php [L]
-    
-    # صفحة اتصل بنا - Contact page
     RewriteRule ^contact-us/?$ contact.php [L]
-    
-    # صفحة التدريب - Training page
     RewriteRule ^training-programs/?$ training.php [L,QSA]
-    
-    # صفحة الخدمات المالية - Financial services page
     RewriteRule ^financial-services/?$ financial.php [L,QSA]
-    
-    # صفحة خدمات الأعمال - Business services page
     RewriteRule ^business-services/?$ service-business.php [L,QSA]
-    
-    # صفحة خدمات الأفراد - Individual services page
     RewriteRule ^individual-services/?$ service-individual.php [L,QSA]
-    
-    # صفحة المكتبة - Library page
-    RewriteRule ^library/?$ library_cat.php [L,QSA]
-    
-    # صفحة المدونة - Blog page
     RewriteRule ^blog/?$ blog.php [L,QSA]
     
-    # صفحة البحث - Search page
-    RewriteRule ^search/?$ search.php [L,QSA]
-    
-    # 3. إعادة توجيه الروابط القديمة إلى الروابط الجديدة
-    # Redirect old URLs to new URLs
-    
-    # إعادة توجيه مباشر للروابط القديمة إلى الروابط الجديدة
-    # Direct redirect from old URLs to new URLs
-    
-    # تعطيل إعادة التوجيه المؤقت للمقالات لاختبار النظام الجديد
-    # إعادة توجيه blog-single.php?id=X إلى /saieb/blog/article-X
-    # RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    # RewriteRule ^blog-single\.php$ /saieb/blog/article-%2? [R=301,L]
-    
-    # تعطيل إعادة التوجيه المؤقت لخدمات الأعمال لحل مشكلة الروابط
-    # إعادة توجيه service-detail.php?id=X&type=2 إلى /business-services/service-X
-    # RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    # RewriteCond %{QUERY_STRING} (^|&)type=2(&|$) [NC]
-    # RewriteRule ^service-detail\.php$ /business-services/service-%2? [R=301,L]
-    
-    # تعطيل إعادة التوجيه المؤقت لخدمات الأفراد لحل مشكلة الروابط
-    # إعادة توجيه service-detail.php?id=X&type=3 إلى /individual-services/service-X
-    # RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    # RewriteCond %{QUERY_STRING} (^|&)type=3(&|$) [NC]
-    # RewriteRule ^service-detail\.php$ /individual-services/service-%2? [R=301,L]
-    
-    # تعطيل إعادة التوجيه المؤقت للخدمات المالية لحل مشكلة الروابط
-    # إعادة توجيه service-detail.php?id=X&type=4 إلى /financial-services/service-X
-    # RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    # RewriteCond %{QUERY_STRING} (^|&)type=4(&|$) [NC]
-    # RewriteRule ^service-detail\.php$ /financial-services/service-%2? [R=301,L]
-    
-    # تعطيل إعادة التوجيه المؤقت لبرامج التدريب لحل مشكلة الروابط
-    # إعادة توجيه service-detail.php?id=X&type=1 إلى /training-programs/program-X
-    # RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    # RewriteCond %{QUERY_STRING} (^|&)type=1(&|$) [NC]
-    # RewriteRule ^service-detail\.php$ /training-programs/program-%2? [R=301,L]
-    
-    # إعادة توجيه service-detail.php?id=X (بدون type) إلى /saieb/service/item-X
-    RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+)(&|$) [NC]
-    RewriteCond %{QUERY_STRING} !(^|&)type= [NC]
-    RewriteRule ^service-detail\.php$ /service/item-%2? [R=301,L]
-
-    # 4. إخفاء امتدادات الملفات PHP - Hide PHP file extensions
-    
-    # إعادة توجيه الطلبات التي تحتوي على .php إلى الروابط بدون امتداد
-    # Redirect requests with .php extension to URLs without extension
-    # مثال: /about.php -> /about
-    RewriteCond %{THE_REQUEST} \s/+([^?]+)\.php[\s?] [NC]
-    RewriteRule ^ /%1 [R=301,L,NE]    # 5. معالجة الطلبات بدون امتداد وتوجيهها إلى ملفات PHP المناسبة
-    # Handle requests without extension and internally map them to PHP files
-    # مثال: /about -> /about.php (داخلياً)
+    # إخفاء امتدادات PHP
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME}.php -f
     RewriteRule ^(.+?)/?$ $1.php [QSA,L]
-    
-    # 6. معالجة الصفحة الرئيسية بشكل خاص
-    # Special handling for homepage
-    RewriteRule ^$ index.php [L]
-    
-    # 7. معالجة الروابط التي تحتوي على معلمات (مثل blog-single?id=123)
-    # Handle URLs with query parameters
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} !\.php
-    RewriteCond %{QUERY_STRING} .+
-    RewriteRule ^([^/]+)$ $1.php [QSA,L]
-    
-    # 8. ضمان وصول الملفات الثابتة (CSS, JS, Images) بشكل صحيح
-    # Ensure static files (CSS, JS, Images) are accessible correctly
-    RewriteCond %{REQUEST_FILENAME} -f
-    RewriteRule ^(.*)$ $1 [L]
 </IfModule>
 
-# MIME Types - أنواع الملفات
-<IfModule mod_mime.c>
-    AddType application/font-woff .woff
-    AddType application/font-woff2 .woff2
-    AddType image/webp .webp
-</IfModule>
-
-# Error Pages - صفحات الأخطاء
+# صفحات الأخطاء
 ErrorDocument 404 /404.php
 ErrorDocument 500 /500.php
